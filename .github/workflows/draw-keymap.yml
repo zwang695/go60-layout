@@ -17,5 +17,6 @@ jobs:
     with:
       keymap_patterns: "config/*.keymap"
       config_path: "keymap_drawer.config.yaml"
+      west_config_path: ""
       output_folder: "keymap-drawer"
       parse_args: "go60:'-c 12'"
