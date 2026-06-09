@@ -10,6 +10,10 @@ These steps will get you using your keymap on your keyboard in the fastest time 
 
 If you are looking to dig deeper into ZMK and develop new functionality, it is recommended to follow the steps of installing ZMK as found on the official ZMK documentation site (linked below).
 
+## Keymap
+
+![Go60 keymap](keymap-drawer/go60.svg)
+
 ## Resources
 - The [official MoErgo Go60 Support](https://moergo.com/go60-support) web site. Go60 documentation and other technical resources.
 - The [official MoErgo Discord Server](https://moergo.com/discord). Instant conversations with other Go60 users.
