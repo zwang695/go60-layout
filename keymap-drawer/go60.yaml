@@ -3,7 +3,18 @@ layers:
   Base:
   - ['=', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-']
   - ['&caps_word', Q, W, E, R, T, Y, U, I, O, P, \]
-  - [ESC, A, S, D, F, G, H, J, K, L, ;, '''']
+  - - ESC
+    - {t: A, h: LCTRL}
+    - {t: S, h: LALT}
+    - {t: D, h: LGUI}
+    - {t: F, h: LSHFT}
+    - G
+    - H
+    - {t: J, h: RSHFT}
+    - {t: K, h: RGUI}
+    - {t: L, h: RALT}
+    - {t: ;, h: RCTRL}
+    - ''''
   - - {t: '&rgb_ug_status_macro', h: Magic}
     - Z
     - X
