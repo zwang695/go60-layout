@@ -24,7 +24,7 @@ layers:
     - END
     - {t: RET, h: Cursor}
     - {t: TAB, h: Keypad}
-    - '&td_LAYER_GUI'
+    - '&td_LAYER_WindowManagement'
     - '&key_repeat'
     - {t: BSPC, h: Mouse}
     - {t: SPACE, h: Symbol}
@@ -342,12 +342,34 @@ layers:
     - ''
     - ''
   - [OUT USB, '', '', '', '', '', '', '', '', '', '', '']
-  GUI:
-  - ['', '', '', '', '', '', '', '', '', '', '', '']
-  - ['', '', '', '', '', '', '', '', '', '', '', '']
-  - ['', '', '', '', '', '', '', '', '', '', '', '']
-  - ['', '', '', '', '', '', '', '', '', '', '', '']
-  - ['', '', '', '', '', '', '', '', '', '', '', '']
+  WindowManagement:
+  - [Ctl+1, Ctl+2, Ctl+3, Ctl+4, Ctl+5, Ctl+6, Gui+1, Gui+2, Gui+3, Gui+4, Gui+5, Gui+6]
+  - ['', '', Ctl+LEFT, Ctl+UP, Ctl+RIGHT, Gui+SPACE, '', Gui+Sft+`, Gui+`, '&mod_shift_tab_v1_TKZ LGUI', '&mod_tab_v2_TKZ LGUI', Gui+W]
+  - ['', '', Ctl+DOWN, '', '', '', '', Ctl+Sft+TAB, Ctl+TAB, Gui+Sft+T, Gui+T, Gui+Sft+TAB]
+  - - ''
+    - ''
+    - ''
+    - Gui+H
+    - Gui+M
+    - Gui+Q
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - {t: HRM_macOS, h: toggle}
+  - - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - {t: HRM_macOS, h: toggle}
+    - ''
+    - ''
+    - ''
 combos:
 - p: [1, 13]
   k: F1
