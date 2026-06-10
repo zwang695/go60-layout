@@ -169,7 +169,7 @@
 #define LAYER_MouseFast 6
 #define LAYER_MouseWarp 7
 #define LAYER_Magic 8
-#define LAYER_GUI 9
+#define LAYER_WindowManagement 9
 
 /* To deal with the situation where there is no Lower layer, to keep &lower happy */
 #ifndef LAYER_Lower
@@ -541,6 +541,26 @@
                 , <&kp MACRO_PLACEHOLDER>;
         };
 
+        // Reverse mod-tab switcher for window/app cycling - TailorKey
+        mod_shift_tab_v1_TKZ: mod_shift_tab_v1_TKZ {
+            label = "&MOD_SHIFT_TAB_V1_TKZ";
+            compatible = "zmk,behavior-macro-one-param";
+            #binding-cells = <1>;
+            tap-ms = <0>;
+            wait-ms = <0>;
+            bindings = <&macro_press>
+                , <&macro_param_1to1>
+                , <&kp MACRO_PLACEHOLDER>
+                , <&kp LSHFT>
+                , <&macro_tap>
+                , <&kp TAB>
+                , <&macro_pause_for_release>
+                , <&macro_release>
+                , <&kp LSHFT>
+                , <&macro_param_1to1>
+                , <&kp MACRO_PLACEHOLDER>;
+        };
+
         // macro string1 sample - Magic Layer F1 - Text output sample macro 1 "¡Hola!" - TailorKey
         mstr1_v1_TKZ: mstr1_v1_TKZ {
             label = "&MSTR1_V1_TKZ";
@@ -592,7 +612,7 @@
 
         ZMK_TD_LAYER(td_LAYER_Keypad, 3)
         ZMK_TD_LAYER(td_LAYER_Magic, 8)
-        ZMK_TD_LAYER(td_LAYER_GUI, 9)
+        ZMK_TD_LAYER(td_LAYER_WindowManagement, LAYER_WindowManagement)
 
         // AutoShift Helper - &AS main macro is chained to &AS_HT hold tap and &AS_Shifted macro. For faster typists, it is recommended to decrease the tapping-term-ms value. A suggested value is 135 ms.
         // More: https://github.com/nickcoutsos/keymap-editor/wiki/Autoshift-using-ZMK-behaviors
@@ -860,7 +880,7 @@
          &kp ESC  &HRM_left_pinky_v1_TKZ LCTRL A  &HRM_left_ring_v1_TKZ LALT S  &HRM_left_middy_v1_TKZ LGUI D  &HRM_left_index_v1_TKZ LSHFT F   &kp G                                                                                                                                                             &kp H  &HRM_right_index_v1_TKZ RSHFT J  &HRM_right_middy_v1_TKZ RGUI K  &HRM_right_ring_v1_TKZ LALT L  &HRM_right_pinky_v1_TKZ RCTRL SEMI           &kp SQT
  &td_LAYER_Magic                           &kp Z                         &kp X                          &kp C                           &kp V   &kp B                                                                                                                                                             &kp N                            &kp M                       &kp COMMA                        &kp DOT                            &kp FSLH  &td_LAYER_Keypad
                                                                       &kp HOME                       &kp LEFT                       &kp RIGHT                                                                                                                                                                                                     &kp UP                        &kp DOWN                        &kp END
-                                                                                                                                                       &thumb_v2_TKZ LAYER_Cursor RET  &thumb_v2_TKZ LAYER_Keypad TAB  &td_LAYER_GUI  &key_repeat  &thumb_v2_TKZ LAYER_Mouse BSPC  &space_v3_TKZ LAYER_Symbol SPACE
+                                                                                                                                                       &thumb_v2_TKZ LAYER_Cursor RET  &thumb_v2_TKZ LAYER_Keypad TAB  &td_LAYER_WindowManagement  &key_repeat  &thumb_v2_TKZ LAYER_Mouse BSPC  &space_v3_TKZ LAYER_Symbol SPACE
             >;
         };
 
@@ -952,14 +972,14 @@
             >;
         };
 
-        layer_GUI {
+        layer_WindowManagement {
             bindings = <
-  &none   &none   &none   &none   &none   &none                                                   &none   &none   &none   &none   &none   &none
-  &none   &none   &none   &none   &none   &none                                                   &none   &none   &none   &none   &none   &none
-  &none   &none   &none   &none   &none   &none                                                   &none   &none   &none   &none   &none   &none
-  &none   &none   &none   &none   &none   &none                                                   &none   &none   &none   &none   &none   &none
-                  &none   &none   &none                                                                   &none   &none   &none
-                                                  &none   &none   &none   &none   &none   &none
+ &kp LC(N1)  &kp LC(N2)  &kp LC(N3)  &kp LC(N4)  &kp LC(N5)  &kp LC(N6)                                             &kp LG(N1)  &kp LG(N2)  &kp LG(N3)  &kp LG(N4)  &kp LG(N5)  &kp LG(N6)
+      &none       &none  &kp LC(LEFT)    &kp LC(UP)  &kp LC(RIGHT)  &kp LG(SPACE)                                          &none  &kp LG(LS(GRAVE))  &kp LG(GRAVE)  &mod_shift_tab_v1_TKZ LGUI  &mod_tab_v2_TKZ LGUI  &kp LG(W)
+      &none       &none  &kp LC(DOWN)        &none          &none         &none                                             &none      &kp LC(LS(TAB))     &kp LC(TAB)       &kp LG(LS(T))           &kp LG(T)  &kp LG(LS(TAB))
+      &none       &none       &none       &kp LG(H)    &kp LG(M)    &kp LG(Q)                                             &none              &none          &none            &none             &none  &to LAYER_HRM_macOS
+                                  &none       &none       &none                                                                      &none       &none       &none
+                                                           &none       &none  &to LAYER_HRM_macOS       &none       &none       &none
             >;
         };
 
