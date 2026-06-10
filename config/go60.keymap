@@ -219,7 +219,7 @@
 };
 
 &cirque_lh_listener {
-    input-processors = <&zip_xy_to_scroll_mapper>, <&zip_temp_layer LAYER_Mouse 250>;
+    input-processors = <&zip_xy_to_scroll_mapper>, <&zip_temp_layer LAYER_Mouse 5000>;
     layer_MouseSlow {
         layers = <LAYER_MouseSlow>;
         input-processors = <&zip_xy_scaler 5 14>, <&zip_xy_transform INPUT_TRANSFORM_Y_INVERT>, <&zip_xy_to_scroll_mapper>;
@@ -235,7 +235,7 @@
 };
 
 &cirque_rh_listener {
-    input-processors = <&zip_temp_layer LAYER_Mouse 250>;
+    input-processors = <&zip_temp_layer LAYER_Mouse 5000>;
     layer_MouseSlow {
         layers = <LAYER_MouseSlow>;
         input-processors = <&zip_xy_scaler 1 1>;
