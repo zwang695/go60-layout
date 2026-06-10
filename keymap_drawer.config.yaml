@@ -8,3 +8,69 @@ parse_config:
     "&kp LG(LS(N3))": Screenshot
     "&kp LG(LS(N4))": Area Screenshot
     "&kp LC(LG(LS(N4)))": Copy Area Screenshot
+    "&kp LS(N1)": "!"
+    "&kp LS(N2)": "@"
+    "&kp LS(N3)": "#"
+    "&kp LS(N4)": "$"
+    "&kp LS(N5)": "%"
+    "&kp LS(N6)": "^"
+    "&kp LS(N7)": "&"
+    "&kp LS(N8)": "*"
+    "&kp LS(N9)": "("
+    "&kp LS(N0)": ")"
+    "&kp LS(MINUS)": "_"
+    "&kp LS(EQUAL)": "+"
+    "&kp LS(LBKT)": "{"
+    "&kp LS(RBKT)": "}"
+    "&kp LS(BSLH)": "|"
+    "&kp LS(FSLH)": "?"
+    "&kp LS(SEMI)": ":"
+    "&kp LS(SINGLE_QUOTE)": '"'
+    "&kp LS(GRAVE)": "~"
+    "&kp LS(COMMA)": "<"
+    "&kp LS(DOT)": ">"
+    "&symb_dotdot_v1_TKZ": ".."
+    "&cur_SELECT_LINE_macos_v1_TKZ": Select Line
+    "&cur_SELECT_WORD_macos_v1_TKZ": Select Word
+    "&cur_SELECT_NONE_v1_TKZ": Clear Select
+    "&cur_EXTEND_LINE_macos_v1_TKZ": Extend Line
+    "&cur_EXTEND_WORD_macos_v1_TKZ": Extend Word
+    "&mod_tab_v2_TKZ LGUI": Cmd Tab
+    "&kp LS(TAB)": Shift Tab
+    "&kp LG(LS(Z))": Redo
+    "&kp LS(LG(Z))": Redo
+    "&kp LG(LS(G))": Find Prev
+    "&kp LS(LG(G))": Find Prev
+    "&kp LG(G)": Find Next
+    "&kp LG(A)": Select All
+    "&kp LG(C)": Copy
+    "&kp LG(F)": Find
+    "&kp LG(L)": Cmd+L
+    "&kp LG(V)": Paste
+    "&kp LG(X)": Cut
+    "&kp LG(Z)": Undo
+    "&kp LG(F3)": Cmd+F3
+    "&kp LS(LG(V))": Cmd+Shift+V
+    "&kp LG(LS(V))": Cmd+Shift+V
+    "&sk LG(LA(LC(LSHFT)))": Hyper
+    "&sk LA(LC(LSHFT))": Meh
+    "&msc SCRL_LEFT": Scroll Left
+    "&msc SCRL_RIGHT": Scroll Right
+    "&msc SCRL_UP": Scroll Up
+    "&msc SCRL_DOWN": Scroll Down
+    "&mmv MOVE_LEFT": Mouse Left
+    "&mmv MOVE_RIGHT": Mouse Right
+    "&mmv MOVE_UP": Mouse Up
+    "&mmv MOVE_DOWN": Mouse Down
+    "&mkp LCLK": Left Click
+    "&mkp RCLK": Right Click
+    "&mkp MB4": Back Button
+    "&mkp MB5": Forward Button
+    "&mstr1_v1_TKZ": Hola Macro
+    "&bootloader": Bootloader
+    "&sys_reset": Reset
+    "&bt_0": BT 0
+    "&bt_1": BT 1
+    "&bt_2": BT 2
+    "&bt_3": BT 3
+    "&out OUT_USB": USB Out

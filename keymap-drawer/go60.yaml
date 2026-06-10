@@ -29,42 +29,42 @@ layers:
     - {t: BSPC, h: Mouse}
     - {t: SPACE, h: Symbol}
   Cursor:
-  - ['', ESC, INS, Sft+TAB, DEL, '', '', '', APP, Screenshot, Area Screenshot, '']
-  - [CAPS, RET, Sft+Gui+Z, Gui+Z, BSPC, Gui+X, Gui+X, Sft+TAB, Gui+Z, Sft+Gui+Z, TAB, Copy Area Screenshot]
+  - ['', ESC, INS, Shift Tab, DEL, '', '', '', APP, Screenshot, Area Screenshot, '']
+  - [CAPS, RET, Redo, Undo, BSPC, Cut, Cut, Shift Tab, Undo, Redo, TAB, Copy Area Screenshot]
   - - One Shot Shift
     - LCTRL
     - LALT
     - LGUI
     - LSHFT
-    - Gui+C
-    - Gui+C
+    - Copy
+    - Copy
     - LEFT
     - UP
     - DOWN
     - RIGHT
     - {t: RSHFT, h: sticky}
-  - [Gui+L, Gui+A, '&cur_SELECT_LINE_macos_v1_TKZ', '&cur_SELECT_WORD_macos_v1_TKZ', Gui+F, Gui+V, Gui+V, HOME, PG UP, PG DN, END, Gui+L]
+  - [Cmd+L, Select All, Select Line, Select Word, Find, Paste, Paste, HOME, PG UP, PG DN, END, Cmd+L]
   - - ''
-    - Sft+Gui+G
-    - Gui+G
-    - Gui+F
-    - Sft+Gui+G
-    - Gui+G
+    - Find Prev
+    - Find Next
+    - Find
+    - Find Prev
+    - Find Next
     - {type: held}
-    - '&mod_tab_v2_TKZ LGUI'
-    - Gui+F3
-    - '&cur_SELECT_NONE_v1_TKZ'
-    - '&cur_EXTEND_LINE_macos_v1_TKZ'
-    - '&cur_EXTEND_WORD_macos_v1_TKZ'
+    - Cmd Tab
+    - Cmd+F3
+    - Clear Select
+    - Extend Line
+    - Extend Word
   Symbol:
-  - ['`', ',', Sft+9, Sft+0, ;, ., '', '', '', '', '', '']
-  - [Sft+1, '[', 'Sft+[', 'Sft+]', ']', Sft+/, '`', DEL, Sft+TAB, INS, ESC, '']
-  - [Sft+3, Sft+6, '=', Sft+-, Sft+4, Sft+8, Sft+', BSPC, TAB, SPACE, RET, '']
-  - - Sft+`
-    - Sft+,
-    - Sft+\
+  - ['`', ',', (, ), ;, ., '', '', '', '', '', '']
+  - ['!', '[', '{', '}', ']', '?', '`', DEL, Shift Tab, INS, ESC, '']
+  - ['#', ^, '=', _, $, '*', '"', BSPC, TAB, SPACE, RET, '']
+  - - '~'
+    - <
+    - '|'
     - '-'
-    - Sft+.
+    - '>'
     - /
     - ''''
     - One Shot Shift
@@ -73,27 +73,27 @@ layers:
     - {t: LCTRL, h: sticky}
     - ''
   - - ''''
-    - Sft+'
-    - Sft+=
+    - '"'
+    - +
     - \
-    - Sft+7
-    - '&symb_dotdot_v1_TKZ'
-    - Sft+5
-    - Sft+;
-    - Sft+2
+    - '&'
+    - ..
+    - '%'
+    - ':'
+    - '@'
     - ''
     - ''
     - {type: held}
   Keypad:
   - ['', F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11]
   - [TAB, '', HOME, UP, END, PG UP, KP MINUS, KP 7, KP 8, KP 9, KP SLASH, F12]
-  - [ESC, Gui+Sft+Z, LEFT, DOWN, RIGHT, PG DN, KP PLUS, KP 4, KP 5, KP 6, KP MULTIPLY, KP NUM]
+  - [ESC, Redo, LEFT, DOWN, RIGHT, PG DN, KP PLUS, KP 4, KP 5, KP 6, KP MULTIPLY, KP NUM]
   - - ''
-    - Gui+Z
-    - Gui+X
-    - Gui+C
-    - Gui+V
-    - Sft+Gui+V
+    - Undo
+    - Cut
+    - Copy
+    - Paste
+    - Cmd+Shift+V
     - KP ENTER
     - KP 1
     - KP 2
@@ -116,9 +116,9 @@ layers:
   - ['', '', '', '', '', '', '', '', '', '', '', '']
   - - ''
     - ''
-    - '&msc SCRL_LEFT'
-    - '&mmv MOVE_UP'
-    - '&msc SCRL_RIGHT'
+    - Scroll Left
+    - Mouse Up
+    - Scroll Right
     - ''
     - ''
     - {t: RSHFT, h: sticky}
@@ -126,19 +126,17 @@ layers:
     - {t: RALT, h: sticky}
     - {t: RGUI, h: sticky}
     - ''
-  - ['', '&msc SCRL_UP', '&mmv MOVE_LEFT', '&mmv MOVE_DOWN', '&mmv MOVE_RIGHT', '&msc SCRL_UP', '&msc SCRL_UP', MouseFast, MouseWarp, MouseSlow, '&mkp LCLK', '&mkp
-      MB4']
-  - ['', '&msc SCRL_DOWN', MouseSlow, MouseWarp, MouseFast, '&msc SCRL_DOWN', '&msc SCRL_DOWN', '&msc SCRL_LEFT', '&mmv MOVE_UP', '&msc SCRL_RIGHT', '&mkp RCLK',
-    '&mkp MB5']
-  - - Gui+X
-    - Gui+C
-    - Gui+V
-    - '&mmv MOVE_LEFT'
-    - '&mmv MOVE_DOWN'
-    - '&mmv MOVE_RIGHT'
-    - '&mkp LCLK'
-    - '&mkp RCLK'
-    - '&mkp MB4'
+  - ['', Scroll Up, Mouse Left, Mouse Down, Mouse Right, Scroll Up, Scroll Up, MouseFast, MouseWarp, MouseSlow, Left Click, Back Button]
+  - ['', Scroll Down, MouseSlow, MouseWarp, MouseFast, Scroll Down, Scroll Down, Scroll Left, Mouse Up, Scroll Right, Right Click, Forward Button]
+  - - Cut
+    - Copy
+    - Paste
+    - Mouse Left
+    - Mouse Down
+    - Mouse Right
+    - Left Click
+    - Right Click
+    - Back Button
     - ''
     - {t: Mouse, h: toggle, type: held}
     - ''
@@ -326,22 +324,22 @@ layers:
     - {type: held}
     - {t: ▽, type: trans}
   Magic:
-  - ['&mstr1_v1_TKZ', BRI DN, BRI UP, PREV, NEXT, PP, MUTE, VOL DN, VOL UP, '', BT CLR, BT CLR ALL]
-  - ['&bootloader', RGB SPI, RGB SAI, RGB HUI, RGB BRI, RGB TOG, PP, PREV, NEXT, '', '', '&bootloader']
-  - ['&sys_reset', RGB SPD, RGB SAD, RGB HUD, RGB BRD, RGB EFF, '', '', '', '', '', '&sys_reset']
+  - [Hola Macro, BRI DN, BRI UP, PREV, NEXT, PP, MUTE, VOL DN, VOL UP, '', BT CLR, BT CLR ALL]
+  - [Bootloader, RGB SPI, RGB SAI, RGB HUI, RGB BRI, RGB TOG, PP, PREV, NEXT, '', '', Bootloader]
+  - [Reset, RGB SPD, RGB SAD, RGB HUD, RGB BRD, RGB EFF, '', '', '', '', '', Reset]
   - - {t: HRM_macOS, h: toggle}
     - ''
-    - '&bt_0'
-    - '&bt_1'
-    - '&bt_2'
-    - '&bt_3'
+    - BT 0
+    - BT 1
+    - BT 2
+    - BT 3
     - ''
     - ''
     - ''
     - ''
     - ''
     - ''
-  - [OUT USB, '', '', '', '', '', '', '', '', '', '', '']
+  - [USB Out, '', '', '', '', '', '', '', '', '', '', '']
 combos:
 - p: [1, 13]
   k: F1
@@ -380,8 +378,8 @@ combos:
   k: F9
   l: [HRM_macOS]
 - p: [51, 43]
-  k: {t: Gui+Alt+Ctl+LSHFT, h: sticky}
+  k: Hyper
   l: [HRM_macOS]
 - p: [52, 44]
-  k: {t: Alt+Ctl+LSHFT, h: sticky}
+  k: Meh
   l: [HRM_macOS]
