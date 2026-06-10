@@ -15,7 +15,7 @@ layers:
     - {t: L, h: LALT}
     - {t: ;, h: RCTRL}
     - ''''
-  - ['&td_LAYER_Magic', Z, X, C, V, B, N, M, ',', ., /, '&td_LAYER_Keypad']
+  - [Magic, Z, X, C, V, B, N, M, ',', ., /, Keypad]
   - - HOME
     - LEFT
     - RIGHT
@@ -24,7 +24,7 @@ layers:
     - END
     - {t: RET, h: Cursor}
     - {t: TAB, h: Keypad}
-    - '&td_LAYER_WindowManagement'
+    - Window Mgmt
     - '&key_repeat'
     - {t: BSPC, h: Mouse}
     - {t: SPACE, h: Symbol}
