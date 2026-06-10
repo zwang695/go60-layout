@@ -24,14 +24,14 @@ layers:
     - END
     - {t: RET, h: Cursor}
     - {t: TAB, h: Keypad}
-    - Window Mgmt
+    - One Shot Shift
     - Repeat
     - {t: BSPC, h: Mouse}
     - {t: SPACE, h: Symbol}
   Cursor:
   - ['', ESC, INS, Sft+TAB, DEL, '', '', '', APP, PAUSE BREAK, SLCK, '']
   - [CAPS, RET, Sft+Gui+Z, Gui+Z, BSPC, Gui+X, Gui+X, Sft+TAB, Gui+Z, Sft+Gui+Z, TAB, PSCRN]
-  - - {t: LSHFT, h: sticky}
+  - - One Shot Shift
     - LCTRL
     - LALT
     - LGUI
@@ -67,7 +67,7 @@ layers:
     - Sft+.
     - /
     - ''''
-    - {t: LSHFT, h: sticky}
+    - One Shot Shift
     - {t: LGUI, h: sticky}
     - {t: LALT, h: sticky}
     - {t: LCTRL, h: sticky}
