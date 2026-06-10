@@ -2,7 +2,7 @@ layout: {zmk_keyboard: go60}
 layers:
   HRM_macOS:
   - ['=', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-']
-  - ['&caps_word', Q, W, E, R, T, Y, U, I, O, P, \]
+  - [Caps Word, Q, W, E, R, T, Y, U, I, O, P, \]
   - - ESC
     - {t: A, h: LCTRL}
     - {t: S, h: LALT}
@@ -25,7 +25,7 @@ layers:
     - {t: RET, h: Cursor}
     - {t: TAB, h: Keypad}
     - Window Mgmt
-    - '&key_repeat'
+    - Repeat
     - {t: BSPC, h: Mouse}
     - {t: SPACE, h: Symbol}
   Cursor:
