@@ -1,5 +1,7 @@
 parse_config:
   raw_binding_map:
+    "&caps_word": Caps Word
+    "&key_repeat": Repeat
     "&td_LAYER_Magic": Magic
     "&td_LAYER_Keypad": Keypad
     "&td_LAYER_WindowManagement": Window Mgmt
