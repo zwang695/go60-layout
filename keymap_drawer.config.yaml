@@ -4,5 +4,7 @@ parse_config:
     "&key_repeat": Repeat
     "&td_LAYER_Magic": Magic
     "&td_LAYER_Keypad": Keypad
-    "&td_LAYER_WindowManagement": Window Mgmt
     "&sk LSHFT": One Shot Shift
+    "&kp LG(LS(N3))": Screenshot
+    "&kp LG(LS(N4))": Area Screenshot
+    "&kp LC(LG(LS(N4)))": Copy Area Screenshot

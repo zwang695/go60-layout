@@ -29,8 +29,8 @@ layers:
     - {t: BSPC, h: Mouse}
     - {t: SPACE, h: Symbol}
   Cursor:
-  - ['', ESC, INS, Sft+TAB, DEL, '', '', '', APP, PAUSE BREAK, SLCK, '']
-  - [CAPS, RET, Sft+Gui+Z, Gui+Z, BSPC, Gui+X, Gui+X, Sft+TAB, Gui+Z, Sft+Gui+Z, TAB, PSCRN]
+  - ['', ESC, INS, Sft+TAB, DEL, '', '', '', APP, Screenshot, Area Screenshot, '']
+  - [CAPS, RET, Sft+Gui+Z, Gui+Z, BSPC, Gui+X, Gui+X, Sft+TAB, Gui+Z, Sft+Gui+Z, TAB, Copy Area Screenshot]
   - - One Shot Shift
     - LCTRL
     - LALT
@@ -327,7 +327,7 @@ layers:
     - {t: ▽, type: trans}
   Magic:
   - ['&mstr1_v1_TKZ', BRI DN, BRI UP, PREV, NEXT, PP, MUTE, VOL DN, VOL UP, '', BT CLR, BT CLR ALL]
-  - ['&bootloader', RGB SPI, RGB SAI, RGB HUI, RGB BRI, RGB TOG, '', '', '', '', '', '&bootloader']
+  - ['&bootloader', RGB SPI, RGB SAI, RGB HUI, RGB BRI, RGB TOG, PP, PREV, NEXT, '', '', '&bootloader']
   - ['&sys_reset', RGB SPD, RGB SAD, RGB HUD, RGB BRD, RGB EFF, '', '', '', '', '', '&sys_reset']
   - - {t: HRM_macOS, h: toggle}
     - ''
@@ -342,34 +342,6 @@ layers:
     - ''
     - ''
   - [OUT USB, '', '', '', '', '', '', '', '', '', '', '']
-  WindowManagement:
-  - [Ctl+1, Ctl+2, Ctl+3, Ctl+4, Ctl+5, Ctl+6, Gui+1, Gui+2, Gui+3, Gui+4, Gui+5, Gui+6]
-  - ['', '', Ctl+LEFT, Ctl+UP, Ctl+RIGHT, Gui+SPACE, '', Gui+Sft+`, Gui+`, '&mod_shift_tab_v1_TKZ LGUI', '&mod_tab_v2_TKZ LGUI', Gui+W]
-  - ['', '', Ctl+DOWN, '', '', '', '', Ctl+Sft+TAB, Ctl+TAB, Gui+Sft+T, Gui+T, Gui+Sft+TAB]
-  - - ''
-    - ''
-    - ''
-    - Gui+H
-    - Gui+M
-    - Gui+Q
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - {t: HRM_macOS, h: toggle}
-  - - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - ''
-    - {t: HRM_macOS, h: toggle}
-    - ''
-    - ''
-    - ''
 combos:
 - p: [1, 13]
   k: F1
