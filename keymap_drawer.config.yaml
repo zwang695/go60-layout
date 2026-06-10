@@ -5,3 +5,4 @@ parse_config:
     "&td_LAYER_Magic": Magic
     "&td_LAYER_Keypad": Keypad
     "&td_LAYER_WindowManagement": Window Mgmt
+    "&sk LSHFT": One Shot Shift
