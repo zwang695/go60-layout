@@ -219,18 +219,18 @@
 };
 
 &cirque_lh_listener {
-    input-processors = <&zip_xy_scaler 1 7>, <&zip_xy_transform INPUT_TRANSFORM_Y_INVERT>, <&zip_xy_to_scroll_mapper>, <&zip_temp_layer LAYER_Mouse 5000>;
+    input-processors = <&zip_xy_scaler 1 14>, <&zip_xy_transform INPUT_TRANSFORM_Y_INVERT>, <&zip_xy_to_scroll_mapper>, <&zip_temp_layer LAYER_Mouse 5000>;
     layer_MouseSlow {
         layers = <LAYER_MouseSlow>;
-        input-processors = <&zip_xy_scaler 1 14>, <&zip_xy_transform INPUT_TRANSFORM_Y_INVERT>, <&zip_xy_to_scroll_mapper>;
+        input-processors = <&zip_xy_scaler 1 28>, <&zip_xy_transform INPUT_TRANSFORM_Y_INVERT>, <&zip_xy_to_scroll_mapper>;
     };
     layer_MouseFast {
         layers = <LAYER_MouseFast>;
-        input-processors = <&zip_xy_scaler 2 7>, <&zip_xy_transform INPUT_TRANSFORM_Y_INVERT>, <&zip_xy_to_scroll_mapper>;
+        input-processors = <&zip_xy_scaler 1 7>, <&zip_xy_transform INPUT_TRANSFORM_Y_INVERT>, <&zip_xy_to_scroll_mapper>;
     };
     layer_MouseWarp {
         layers = <LAYER_MouseWarp>;
-        input-processors = <&zip_xy_scaler 4 7>, <&zip_xy_transform INPUT_TRANSFORM_Y_INVERT>, <&zip_xy_to_scroll_mapper>;
+        input-processors = <&zip_xy_scaler 2 7>, <&zip_xy_transform INPUT_TRANSFORM_Y_INVERT>, <&zip_xy_to_scroll_mapper>;
     };
 };
 
