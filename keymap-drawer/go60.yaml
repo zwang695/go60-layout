@@ -70,7 +70,7 @@ layers:
     - Redo
     - Copy
     - Paste
-    - {t: ▽, type: trans}
+    - Cmd+Shift+V
     - Cmd+L
     - Select Word Back
     - Select Word
