@@ -25,9 +25,9 @@ layers:
     - {t: _, h: Cursor}
     - {t: BSPC, h: Symbol}
     - One Shot Shift
+    - One Shot Shift
     - {t: ESC, h: Keypad}
     - SPACE
-    - One Shot Shift
   Cursor:
   - - {t: ▽, type: trans}
     - {t: ▽, type: trans}
@@ -142,8 +142,8 @@ layers:
     - ''
     - {t: ▽, type: trans}
     - {t: ▽, type: trans}
-    - {type: held}
     - {t: ▽, type: trans}
+    - {type: held}
     - KP 0
   Mouse:
   - ['', '', '', '', '', '', '', '', '', '', '', '']
