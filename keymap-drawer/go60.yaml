@@ -429,4 +429,4 @@ combos:
   l: [HRM_macOS]
 - p: [28, 31]
   k: Mouse Toggle
-  l: [HRM_macOS, Mouse]
+  l: [Mouse]
