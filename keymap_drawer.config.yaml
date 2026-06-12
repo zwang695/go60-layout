@@ -27,6 +27,11 @@ parse_config:
     "&kp LS(GRAVE)": "~"
     "&kp LS(COMMA)": "<"
     "&kp LS(DOT)": ">"
+    "&arrow_morph": Arrow
+    "&arrow_plain_macro": "->"
+    "&arrow_shift_macro": "=>"
+    "&arrow_alt_macro": "<->"
+    "&arrow_shift_alt_macro": "<=>"
     "&symb_dotdot_v1_TKZ": ".."
     "&cur_SELECT_LINE_macos_v1_TKZ": Select Line
     "&cur_SELECT_WORD_macos_v1_TKZ": Select Word

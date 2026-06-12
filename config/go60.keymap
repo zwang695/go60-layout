@@ -18,6 +18,7 @@
 
 #include <dt-bindings/zmk/outputs.h>
 #include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/modifiers.h>
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/rgb.h>
 
@@ -140,7 +141,7 @@
 #define LAYER_HRM_macOS 0
 #define LAYER_Cursor 1
 #define LAYER_Symbol 2
-#define LAYER_Keypad 3
+#define LAYER_Num 3
 #define LAYER_Mouse 4
 #define LAYER_MouseSlow 5
 #define LAYER_MouseFast 6
@@ -355,12 +356,79 @@
 
 /* Custom Defined Behaviors */
 / {
+    behaviors {
+        arrow_morph: arrow_morph {
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <&arrow_alt_morph>, <&arrow_shift_alt_morph>;
+            mods = <(MOD_LSFT|MOD_RSFT)>;
+        };
 
+        arrow_alt_morph: arrow_alt_morph {
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <&arrow_plain_macro>, <&arrow_alt_macro>;
+            mods = <(MOD_LALT|MOD_RALT)>;
+        };
+
+        arrow_shift_alt_morph: arrow_shift_alt_morph {
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <&arrow_shift_macro>, <&arrow_shift_alt_macro>;
+            mods = <(MOD_LALT|MOD_RALT)>;
+        };
+    };
 };
 
 /* Automatically generated macro definitions */
 / {
     macros {
+
+        arrow_plain_macro: arrow_plain_macro {
+            label = "&ARROW_PLAIN_MACRO";
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            tap-ms = <0>;
+            wait-ms = <0>;
+            bindings = <&macro_tap>
+                , <&kp MINUS>
+                , <&kp LS(DOT)>;
+        };
+
+        arrow_shift_macro: arrow_shift_macro {
+            label = "&ARROW_SHIFT_MACRO";
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            tap-ms = <0>;
+            wait-ms = <0>;
+            bindings = <&macro_tap>
+                , <&kp EQUAL>
+                , <&kp LS(DOT)>;
+        };
+
+        arrow_alt_macro: arrow_alt_macro {
+            label = "&ARROW_ALT_MACRO";
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            tap-ms = <0>;
+            wait-ms = <0>;
+            bindings = <&macro_tap>
+                , <&kp LS(COMMA)>
+                , <&kp MINUS>
+                , <&kp LS(DOT)>;
+        };
+
+        arrow_shift_alt_macro: arrow_shift_alt_macro {
+            label = "&ARROW_SHIFT_ALT_MACRO";
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            tap-ms = <0>;
+            wait-ms = <0>;
+            bindings = <&macro_tap>
+                , <&kp LS(COMMA)>
+                , <&kp EQUAL>
+                , <&kp LS(DOT)>;
+        };
 
         // AutoShift Helper- &AS main macro is chained to &AS_HT hold tap and &AS_Shifted macro - TailorKey
         AS_Shifted_v1_TKZ: AS_Shifted_v1_TKZ {
@@ -776,7 +844,7 @@
          &kp TAB  &HRM_left_pinky_v1_TKZ LCTRL A  &HRM_left_ring_v1_TKZ LALT S  &HRM_left_middy_v1_TKZ LGUI D  &HRM_left_index_v1_TKZ LSHFT F   &kp G                                                                                                                                                             &kp H  &HRM_right_index_v1_TKZ RSHFT J  &HRM_right_middy_v1_TKZ RGUI K  &HRM_right_ring_v1_TKZ LALT L  &HRM_right_pinky_v1_TKZ RCTRL SEMI           &kp SQT
    &mo LAYER_Magic                           &kp Z                         &kp X                          &kp C                           &kp V   &kp B                                                                                                                                                             &kp N                            &kp M                       &kp COMMA                        &kp DOT                            &kp FSLH        &kp RET
                                                                       &kp HOME                       &kp LEFT                       &kp RIGHT                                                                                                                                                                                                     &kp UP                        &kp DOWN                        &kp END
-                                                                                                                                                 &thumb_v2_TKZ LAYER_Cursor LS(MINUS)  &thumb_v2_TKZ LAYER_Symbol BSPC  &sk LSHFT  &sk LSHFT  &thumb_v2_TKZ LAYER_Keypad ESC  &kp SPACE
+                                                                                                                                                 &thumb_v2_TKZ LAYER_Cursor LS(MINUS)  &thumb_v2_TKZ LAYER_Symbol BSPC  &sk LSHFT  &sk LSHFT  &thumb_v2_TKZ LAYER_Num ESC  &kp SPACE
             >;
         };
 
@@ -793,23 +861,23 @@
 
         layer_Symbol {
             bindings = <
-     &kp GRAVE      &kp COMMA    &kp LS(N9)            &kp LS(N0)       &kp SEMI       &kp DOT                                                                               &none      &none        &none                &none      &none   &none
-    &kp LS(N1)       &kp LBKT  &kp LS(LBKT)          &kp LS(RBKT)       &kp RBKT  &kp LS(FSLH)                                                                           &kp GRAVE    &kp DEL  &kp LS(TAB)              &kp INS    &kp ESC   &none
-    &kp LS(N3)     &kp LS(N6)     &kp EQUAL         &kp LS(MINUS)     &kp LS(N4)    &kp LS(N8)                                                                &kp LS(SINGLE_QUOTE)   &kp BSPC      &kp TAB            &kp SPACE    &kp RET   &none
- &kp LS(GRAVE)  &kp LS(COMMA)  &kp LS(BSLH)             &kp MINUS    &kp LS(DOT)      &kp FSLH                                                                             &kp SQT  &sk LSHFT     &sk LGUI             &sk LALT  &sk LCTRL   &none
-                                    &kp SQT  &kp LS(SINGLE_QUOTE)  &kp LS(EQUAL)                                                                                                     &kp BSLH   &kp LS(N7)  &symb_dotdot_v1_TKZ
-                                                                                                &kp LS(N5)  &kp LS(SEMI)  &kp LS(N2)   &none   &none   &none
+             &trans           &trans         &trans       &trans       &trans        &trans                                                                           &trans       &trans        &trans        &trans       &trans        &trans
+             &trans        &kp GRAVE  &kp LS(COMMA)  &kp LS(DOT)    &kp MINUS  &kp LS(BSLH)                                                                       &kp LS(N6)  &kp LS(LBKT)  &kp LS(RBKT)  &kp LS(N4)  &arrow_morph        &trans
+             &trans       &kp LS(N1)     &kp LS(N8)     &kp FSLH    &kp EQUAL    &kp LS(N7)                                                                       &kp LS(N3)    &kp LS(N9)    &kp LS(N0)    &kp SEMI  &kp LS(SINGLE_QUOTE) &trans
+             &trans    &kp LS(GRAVE)  &kp LS(EQUAL)     &kp LBKT     &kp RBKT    &kp LS(N5)                                                                       &kp LS(N2)  &kp LS(SEMI)    &kp COMMA      &kp DOT       &kp SQT        &trans
+                                             &none          &none        &none                                                                                               &none        &none        &none
+                                                                                                         &trans       &trans        &none        &trans       &trans         &none
             >;
         };
 
-        layer_Keypad {
+        layer_Num {
             bindings = <
-   &none         &kp F1     &kp F2     &kp F3     &kp F4         &kp F5                                                           &kp F6     &kp F7     &kp F8     &kp F9          &kp F10              &kp F11
- &kp TAB          &none   &kp HOME     &kp UP    &kp END      &kp PG_UP                                                     &kp KP_MINUS  &kp KP_N7  &kp KP_N8  &kp KP_N9     &kp KP_SLASH              &kp F12
- &kp ESC  &kp LG(LS(Z))   &kp LEFT   &kp DOWN  &kp RIGHT      &kp PG_DN                                                      &kp KP_PLUS  &kp KP_N4  &kp KP_N5  &kp KP_N6  &kp KP_MULTIPLY           &kp KP_NUM
-   &none      &kp LG(Z)  &kp LG(X)  &kp LG(C)  &kp LG(V)  &kp LS(LG(V))                                                     &kp KP_ENTER  &kp KP_N1  &kp KP_N2  &kp KP_N3        &kp EQUAL  &to LAYER_HRM_macOS
-                             &none     &trans     &trans                                                                                      &none  &kp KP_N0      &none
-                                                                          &none  &trans  &trans  &trans  &trans  &kp KP_N0
+   &kp ESC         &kp F1     &kp F2     &kp F3     &kp F4          &kp F5                                                           &kp F6     &kp F7      &kp F8      &kp F9     &kp F10     &kp F11
+     &none       &kp FSLH     &kp N9     &kp N8     &kp N7      &kp LS(N8)                                                         &none      &none    &kp LBKT    &kp RBKT     &none     &kp F12
+     &none      &kp MINUS     &kp N3     &kp N2     &kp N1   &kp LS(EQUAL)                                                       &none  &kp RSHFT    &kp RGUI    &kp RALT  &kp RCTRL      &none
+     &none          &kp X     &kp N6     &kp N5     &kp N4      &kp LS(N5)                                                         &none      &none   &kp COMMA     &kp DOT     &none      &none
+                              &none      &none      &none                                                                                         &none      &none      &none
+                                                                              &kp N0  &tog LAYER_Num      &none      &none      &none      &none
             >;
         };
 

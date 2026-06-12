@@ -26,7 +26,7 @@ layers:
     - {t: BSPC, h: Symbol}
     - One Shot Shift
     - One Shot Shift
-    - {t: ESC, h: Keypad}
+    - {t: ESC, h: Num}
     - SPACE
   Cursor:
   - - {t: ▽, type: trans}
@@ -90,61 +90,83 @@ layers:
     - Cursor Lock
     - ''
   Symbol:
-  - ['`', ',', (, ), ;, ., '', '', '', '', '', '']
-  - ['!', '[', '{', '}', ']', '?', '`', DEL, Shift Tab, INS, ESC, '']
-  - ['#', ^, '=', _, $, '*', '"', BSPC, TAB, SPACE, RET, '']
-  - - '~'
+  - - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+  - - {t: ▽, type: trans}
+    - '`'
     - <
-    - '|'
-    - '-'
     - '>'
+    - '-'
+    - '|'
+    - ^
+    - '{'
+    - '}'
+    - $
+    - Arrow
+    - {t: ▽, type: trans}
+  - - {t: ▽, type: trans}
+    - '!'
+    - '*'
     - /
-    - ''''
-    - One Shot Shift
-    - {t: LGUI, h: sticky}
-    - {t: LALT, h: sticky}
-    - {t: LCTRL, h: sticky}
-    - ''
-  - - ''''
-    - '"'
-    - +
-    - \
-    - '&'
-    - ..
-    - '%'
-    - {t: ':', type: held}
-    - '@'
-    - ''
-    - ''
-    - ''
-  Keypad:
-  - ['', F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11]
-  - [TAB, '', HOME, UP, END, PG UP, KP MINUS, KP 7, KP 8, KP 9, KP SLASH, F12]
-  - [ESC, Redo, LEFT, DOWN, RIGHT, PG DN, KP PLUS, KP 4, KP 5, KP 6, KP MULTIPLY, KP NUM]
-  - - ''
-    - Undo
-    - Cut
-    - Copy
-    - Paste
-    - Cmd+Shift+V
-    - KP ENTER
-    - KP 1
-    - KP 2
-    - KP 3
     - '='
-    - {t: HRM_macOS, h: toggle}
+    - '&'
+    - '#'
+    - (
+    - )
+    - ;
+    - '"'
+    - {t: ▽, type: trans}
+  - - {t: ▽, type: trans}
+    - '~'
+    - +
+    - '['
+    - ']'
+    - '%'
+    - '@'
+    - ':'
+    - ','
+    - .
+    - ''''
+    - {t: ▽, type: trans}
   - - ''
-    - {t: ▽, type: trans}
-    - {t: ▽, type: trans}
-    - ''
-    - KP 0
     - ''
     - ''
-    - {t: ▽, type: trans}
-    - {t: ▽, type: trans}
+    - ''
+    - ''
+    - ''
     - {t: ▽, type: trans}
     - {type: held}
-    - KP 0
+    - ''
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+    - ''
+  Num:
+  - [ESC, F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11]
+  - ['', /, '9', '8', '7', '*', '', '', '[', ']', '', F12]
+  - ['', '-', '3', '2', '1', +, '', RSHFT, RGUI, RALT, RCTRL, '']
+  - ['', X, '6', '5', '4', '%', '', '', ',', ., '', '']
+  - - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - ''
+    - '0'
+    - {t: Num, h: toggle}
+    - ''
+    - ''
+    - {type: held}
+    - ''
   Mouse:
   - ['', '', '', '', '', '', '', '', '', '', '', '']
   - - ''
