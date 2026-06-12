@@ -828,6 +828,14 @@
             bindings = <&sk LA(LC(LSHFT))>;
             layers = <LAYER_HRM_macOS>;
         };
+
+        // Mouse toggle combo for Go60
+        combo_mouse_toggle_fj_TKZ {
+            timeout-ms = <50>;
+            key-positions = <POS_LH_C2R3 POS_RH_C2R3>;
+            bindings = <&tog LAYER_Mouse>;
+            layers = <LAYER_HRM_macOS LAYER_Mouse>;
+        };
     };
 };
 
@@ -883,12 +891,12 @@
 
         layer_Mouse {
             bindings = <
-  &none           &none                &none                &none                &none           &none                                                                             &none                &none                &none                &none      &none     &none
-  &none           &none       &msc SCRL_LEFT         &mmv MOVE_UP      &msc SCRL_RIGHT           &none                                                                             &none            &sk RSHFT            &sk RCTRL             &sk RALT   &sk RGUI     &none
-  &none    &msc SCRL_UP       &mmv MOVE_LEFT       &mmv MOVE_DOWN      &mmv MOVE_RIGHT    &msc SCRL_UP                                                                      &msc SCRL_UP  &mo LAYER_MouseFast  &mo LAYER_MouseWarp  &mo LAYER_MouseSlow  &mkp LCLK  &mkp MB4
-  &none  &msc SCRL_DOWN  &mo LAYER_MouseSlow  &mo LAYER_MouseWarp  &mo LAYER_MouseFast  &msc SCRL_DOWN                                                                    &msc SCRL_DOWN       &msc SCRL_LEFT         &mmv MOVE_UP      &msc SCRL_RIGHT  &mkp RCLK  &mkp MB5
-                                   &kp LG(X)            &kp LG(C)            &kp LG(V)                                                                                                         &mmv MOVE_LEFT       &mmv MOVE_DOWN      &mmv MOVE_RIGHT
-                                                                                                        &mkp LCLK  &mkp RCLK  &mkp MB4   &none  &tog LAYER_Mouse   &none
+ &none  &none     &none                 &none                 &none                 &none       &none  &none                 &none                 &none                 &none  &none
+ &none  &none     &none                 &none                 &none                 &none       &none  &none                 &none                 &none                 &none  &none
+ &none  &sk LCTRL &sk LALT              &sk LGUI              &sk LSHFT             &mkp MB4    &none  &mo LAYER_MouseFast  &mo LAYER_MouseWarp  &mo LAYER_MouseSlow  &none  &none
+ &none  &none     &mo LAYER_MouseSlow  &mo LAYER_MouseWarp  &mo LAYER_MouseFast  &mkp MB5    &none  &none                 &none                 &none                 &none  &none
+                 &kp LG(X)            &kp LG(C)             &kp LG(V)                                                   &none  &none  &none
+                                                                                       &mkp LCLK  &mkp RCLK  &none  &none  &none  &none
             >;
         };
 

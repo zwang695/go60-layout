@@ -169,32 +169,21 @@ layers:
     - ''
   Mouse:
   - ['', '', '', '', '', '', '', '', '', '', '', '']
+  - ['', '', '', '', '', '', '', '', '', '', '', '']
   - - ''
-    - ''
-    - Scroll Left
-    - Mouse Up
-    - Scroll Right
-    - ''
-    - ''
-    - {t: RSHFT, h: sticky}
-    - {t: RCTRL, h: sticky}
-    - {t: RALT, h: sticky}
-    - {t: RGUI, h: sticky}
-    - ''
-  - ['', Scroll Up, Mouse Left, Mouse Down, Mouse Right, Scroll Up, Scroll Up, MouseFast, MouseWarp, MouseSlow, Left Click, Back Button]
-  - ['', Scroll Down, MouseSlow, MouseWarp, MouseFast, Scroll Down, Scroll Down, Scroll Left, Mouse Up, Scroll Right, Right Click, Forward Button]
-  - - Cut
-    - Copy
-    - Paste
-    - Mouse Left
-    - Mouse Down
-    - Mouse Right
-    - Left Click
-    - Right Click
+    - {t: LCTRL, h: sticky}
+    - {t: LALT, h: sticky}
+    - {t: LGUI, h: sticky}
+    - One Shot Shift
     - Back Button
     - ''
-    - {t: Mouse, h: toggle}
+    - MouseFast
+    - MouseWarp
+    - MouseSlow
     - ''
+    - ''
+  - ['', '', MouseSlow, MouseWarp, MouseFast, Forward Button, '', '', '', '', '', '']
+  - [Cut, Copy, Paste, '', '', '', Left Click, Right Click, '', '', '', '']
   MouseSlow:
   - - {t: ▽, type: trans}
     - {t: ▽, type: trans}
@@ -438,3 +427,6 @@ combos:
 - p: [52, 44]
   k: Meh
   l: [HRM_macOS]
+- p: [28, 31]
+  k: Mouse Toggle
+  l: [HRM_macOS, Mouse]
