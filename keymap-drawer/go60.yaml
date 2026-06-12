@@ -1,9 +1,9 @@
 layout: {zmk_keyboard: go60}
 layers:
   HRM_macOS:
-  - ['=', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-']
+  - [+, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-']
   - [Caps Word, Q, W, E, R, T, Y, U, I, O, P, \]
-  - - ESC
+  - - TAB
     - {t: A, h: LCTRL}
     - {t: S, h: LALT}
     - {t: D, h: LGUI}
@@ -15,19 +15,19 @@ layers:
     - {t: L, h: LALT}
     - {t: ;, h: RCTRL}
     - ''''
-  - [Magic, Z, X, C, V, B, N, M, ',', ., /, Keypad]
+  - [Magic, Z, X, C, V, B, N, M, ',', ., /, RET]
   - - HOME
     - LEFT
     - RIGHT
     - UP
     - DOWN
     - END
-    - {t: RET, h: Cursor}
-    - {t: TAB, h: Keypad}
+    - {t: _, h: Cursor}
+    - {t: BSPC, h: Symbol}
     - One Shot Shift
-    - Repeat
-    - {t: BSPC, h: Mouse}
-    - {t: SPACE, h: Symbol}
+    - {t: ESC, h: Keypad}
+    - SPACE
+    - One Shot Shift
   Cursor:
   - ['', ESC, INS, Shift Tab, DEL, '', '', '', APP, Screenshot, Area Screenshot, '']
   - [CAPS, RET, Redo, Undo, BSPC, Cut, Cut, Shift Tab, Undo, Redo, TAB, Copy Area Screenshot]
@@ -79,11 +79,11 @@ layers:
     - '&'
     - ..
     - '%'
-    - ':'
+    - {t: ':', type: held}
     - '@'
     - ''
     - ''
-    - {type: held}
+    - ''
   Keypad:
   - ['', F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11]
   - [TAB, '', HOME, UP, END, PG UP, KP MINUS, KP 7, KP 8, KP 9, KP SLASH, F12]
@@ -107,9 +107,9 @@ layers:
     - KP 0
     - ''
     - ''
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
     - {type: held}
-    - {t: ▽, type: trans}
-    - {t: ▽, type: trans}
     - {t: ▽, type: trans}
     - KP 0
   Mouse:
@@ -138,7 +138,7 @@ layers:
     - Right Click
     - Back Button
     - ''
-    - {t: Mouse, h: toggle, type: held}
+    - {t: Mouse, h: toggle}
     - ''
   MouseSlow:
   - - {t: ▽, type: trans}
@@ -199,7 +199,7 @@ layers:
     - {t: ▽, type: trans}
     - {t: ▽, type: trans}
     - {t: ▽, type: trans}
-    - {type: held}
+    - {t: ▽, type: trans}
     - {t: ▽, type: trans}
   MouseFast:
   - - {t: ▽, type: trans}
@@ -260,7 +260,7 @@ layers:
     - {t: ▽, type: trans}
     - {t: ▽, type: trans}
     - {t: ▽, type: trans}
-    - {type: held}
+    - {t: ▽, type: trans}
     - {t: ▽, type: trans}
   MouseWarp:
   - - {t: ▽, type: trans}
@@ -321,13 +321,13 @@ layers:
     - {t: ▽, type: trans}
     - {t: ▽, type: trans}
     - {t: ▽, type: trans}
-    - {type: held}
+    - {t: ▽, type: trans}
     - {t: ▽, type: trans}
   Magic:
   - [Hola Macro, BRI DN, BRI UP, PREV, NEXT, PP, MUTE, VOL DN, VOL UP, '', BT CLR, BT CLR ALL]
   - [Bootloader, RGB SPI, RGB SAI, RGB HUI, RGB BRI, RGB TOG, PP, PREV, NEXT, '', '', Bootloader]
   - [Reset, RGB SPD, RGB SAD, RGB HUD, RGB BRD, RGB EFF, '', '', '', '', '', Reset]
-  - - {t: HRM_macOS, h: toggle}
+  - - {t: HRM_macOS, h: toggle, type: held}
     - ''
     - BT 0
     - BT 1

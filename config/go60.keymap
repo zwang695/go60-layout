@@ -42,29 +42,6 @@
 #define CONCAT_(a, b) a##b
 #define CONCAT(a, b) CONCAT_(a, b)
 
-#define ZMK_BEHAVIOR_CORE_tap_dance  \
-    compatible = "zmk,behavior-tap-dance"; \
-    #binding-cells = <0>
-
-#define ZMK_BEHAVIOR(name, type, ...) \
-    name: name { \
-        ZMK_BEHAVIOR_CORE_ ## type; \
-        __VA_ARGS__ \
-    };
-
-#define ZMK_TAP_DANCE(name, ...) \
-    ZMK_BEHAVIOR(name, tap_dance, __VA_ARGS__)
-
-#define ZMK_TD_LAYER(name, layer) \
-    ZMK_TAP_DANCE(name, \
-        tapping-term-ms = <200>; \
-        bindings = <&mo layer>, <&to layer>; \
-)
-
-
-
-
-
 /* Key positions */
 
 #define POS_LH_C6R1 0
@@ -170,11 +147,6 @@
 #define LAYER_MouseWarp 7
 #define LAYER_Magic 8
 
-/* To deal with the situation where there is no Lower layer, to keep &lower happy */
-#ifndef LAYER_Lower
-#define LAYER_Lower 0
-#endif
-
 /* Generated input processors */
 
 
@@ -251,12 +223,6 @@
 };
 
 /* System behavior and macros */
-/ {
-    behaviors {
-        ZMK_TD_LAYER(lower, LAYER_Lower)
-    };
-};
-
 / {
     macros {
         rgb_ug_status_macro: rgb_ug_status_macro {
@@ -586,12 +552,6 @@
 /* Automatically generated behavior definitions */
 / {
     behaviors {
-
-        // Layer tap dance behaviors
-
-        ZMK_TD_LAYER(td_LAYER_Keypad, 3)
-        ZMK_TD_LAYER(td_LAYER_Magic, 8)
-
         // AutoShift Helper - &AS main macro is chained to &AS_HT hold tap and &AS_Shifted macro. For faster typists, it is recommended to decrease the tapping-term-ms value. A suggested value is 135 ms.
         // More: https://github.com/nickcoutsos/keymap-editor/wiki/Autoshift-using-ZMK-behaviors
         AS_HT_v2_TKZ: AS_HT_v2_TKZ {
@@ -714,16 +674,6 @@
             hold-trigger-key-positions = <KEYS_L THUMBS>;
             hold-trigger-on-release;
             hold-while-undecided;
-        };
-
-        // space_layer_access - TailorKey
-        space_v3_TKZ: space_v3_TKZ {
-            compatible = "zmk,behavior-hold-tap";
-            #binding-cells = <2>;
-            tapping-term-ms = <200>;
-            bindings = <&mo>, <&kp>;
-            flavor = "balanced";
-            quick-tap-ms = <150>;
         };
 
         // thumb_layer_access - TailorKey
@@ -853,12 +803,12 @@
 
         layer_HRM_macOS {
             bindings = <
-       &kp EQUAL                          &kp N1                        &kp N2                         &kp N3                          &kp N4  &kp N5                                                                                                                                                            &kp N6                           &kp N7                          &kp N8                         &kp N9                              &kp N0         &kp MINUS
+       &kp LS(EQUAL)                      &kp N1                        &kp N2                         &kp N3                          &kp N4  &kp N5                                                                                                                                                            &kp N6                           &kp N7                          &kp N8                         &kp N9                              &kp N0         &kp MINUS
         &caps_word                           &kp Q                         &kp W                          &kp E                           &kp R   &kp T                                                                                                                                                             &kp Y                            &kp U                           &kp I                          &kp O                               &kp P          &kp BSLH
-         &kp ESC  &HRM_left_pinky_v1_TKZ LCTRL A  &HRM_left_ring_v1_TKZ LALT S  &HRM_left_middy_v1_TKZ LGUI D  &HRM_left_index_v1_TKZ LSHFT F   &kp G                                                                                                                                                             &kp H  &HRM_right_index_v1_TKZ RSHFT J  &HRM_right_middy_v1_TKZ RGUI K  &HRM_right_ring_v1_TKZ LALT L  &HRM_right_pinky_v1_TKZ RCTRL SEMI           &kp SQT
- &td_LAYER_Magic                           &kp Z                         &kp X                          &kp C                           &kp V   &kp B                                                                                                                                                             &kp N                            &kp M                       &kp COMMA                        &kp DOT                            &kp FSLH  &td_LAYER_Keypad
+         &kp TAB  &HRM_left_pinky_v1_TKZ LCTRL A  &HRM_left_ring_v1_TKZ LALT S  &HRM_left_middy_v1_TKZ LGUI D  &HRM_left_index_v1_TKZ LSHFT F   &kp G                                                                                                                                                             &kp H  &HRM_right_index_v1_TKZ RSHFT J  &HRM_right_middy_v1_TKZ RGUI K  &HRM_right_ring_v1_TKZ LALT L  &HRM_right_pinky_v1_TKZ RCTRL SEMI           &kp SQT
+   &mo LAYER_Magic                           &kp Z                         &kp X                          &kp C                           &kp V   &kp B                                                                                                                                                             &kp N                            &kp M                       &kp COMMA                        &kp DOT                            &kp FSLH        &kp RET
                                                                       &kp HOME                       &kp LEFT                       &kp RIGHT                                                                                                                                                                                                     &kp UP                        &kp DOWN                        &kp END
-                                                                                                                                                       &thumb_v2_TKZ LAYER_Cursor RET  &thumb_v2_TKZ LAYER_Keypad TAB  &sk LSHFT  &key_repeat  &thumb_v2_TKZ LAYER_Mouse BSPC  &space_v3_TKZ LAYER_Symbol SPACE
+                                                                                                                                                 &thumb_v2_TKZ LAYER_Cursor LS(MINUS)  &thumb_v2_TKZ LAYER_Symbol BSPC  &sk LSHFT  &thumb_v2_TKZ LAYER_Keypad ESC  &kp SPACE  &sk LSHFT
             >;
         };
 

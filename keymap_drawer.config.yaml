@@ -1,9 +1,6 @@
 parse_config:
   raw_binding_map:
     "&caps_word": Caps Word
-    "&key_repeat": Repeat
-    "&td_LAYER_Magic": Magic
-    "&td_LAYER_Keypad": Keypad
     "&sk LSHFT": One Shot Shift
     "&kp LG(LS(N3))": Screenshot
     "&kp LG(LS(N4))": Area Screenshot
