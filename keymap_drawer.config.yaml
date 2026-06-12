@@ -5,6 +5,7 @@ parse_config:
     "&kp LG(LS(N3))": Screenshot
     "&kp LG(LS(N4))": Area Screenshot
     "&kp LC(LG(LS(N4)))": Copy Area Screenshot
+    "&kp LC(LG(LS(N3)))": Copy Screenshot
     "&kp LS(N1)": "!"
     "&kp LS(N2)": "@"
     "&kp LS(N3)": "#"
@@ -29,18 +30,22 @@ parse_config:
     "&symb_dotdot_v1_TKZ": ".."
     "&cur_SELECT_LINE_macos_v1_TKZ": Select Line
     "&cur_SELECT_WORD_macos_v1_TKZ": Select Word
-    "&cur_SELECT_NONE_v1_TKZ": Clear Select
-    "&cur_EXTEND_LINE_macos_v1_TKZ": Extend Line
-    "&cur_EXTEND_WORD_macos_v1_TKZ": Extend Word
-    "&mod_tab_v2_TKZ LGUI": Cmd Tab
+    "&cur_SELECT_WORD_BACK_macos_v1_TKZ": Select Word Back
+    "&nav_SEARCH_SELECTED_macos_v1_TKZ": Search Selected
+    "&cyclotab_v1_TKZ": Cyclotab
+    "&tog LAYER_Cursor": Cursor Lock
+    "&kp LC(LS(TAB))": Prev Tab
+    "&kp LC(TAB)": Next Tab
     "&kp LS(TAB)": Shift Tab
+    "&kp C_AC_BACK": Browser Back
+    "&kp C_AC_FORWARD": Browser Forward
     "&kp LG(LS(Z))": Redo
     "&kp LS(LG(Z))": Redo
     "&kp LG(LS(G))": Find Prev
     "&kp LS(LG(G))": Find Prev
     "&kp LG(G)": Find Next
-    "&kp LG(A)": Select All
     "&kp LG(C)": Copy
+    "&kp LG(R)": Cmd+R
     "&kp LG(F)": Find
     "&kp LG(L)": Cmd+L
     "&kp LG(V)": Paste

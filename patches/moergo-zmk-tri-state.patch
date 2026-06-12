@@ -1,0 +1,815 @@
+diff --git a/app/CMakeLists.txt b/app/CMakeLists.txt
+index c41153cb17c..6e31d09896c 100644
+--- a/app/CMakeLists.txt
++++ b/app/CMakeLists.txt
+@@ -60,6 +60,7 @@ if ((NOT CONFIG_ZMK_SPLIT) OR CONFIG_ZMK_SPLIT_ROLE_CENTRAL)
+   target_sources(app PRIVATE src/behaviors/behavior_toggle_layer.c)
+   target_sources(app PRIVATE src/behaviors/behavior_to_layer.c)
+   target_sources(app PRIVATE src/behaviors/behavior_transparent.c)
++  target_sources_ifdef(CONFIG_ZMK_BEHAVIOR_TRI_STATE app PRIVATE src/behaviors/behavior_tri_state.c)
+   target_sources(app PRIVATE src/behaviors/behavior_none.c)
+   target_sources_ifdef(CONFIG_ZMK_BEHAVIOR_SENSOR_ROTATE app PRIVATE src/behaviors/behavior_sensor_rotate.c)
+   target_sources_ifdef(CONFIG_ZMK_BEHAVIOR_SENSOR_ROTATE_VAR app PRIVATE src/behaviors/behavior_sensor_rotate_var.c)
+diff --git a/app/Kconfig.behaviors b/app/Kconfig.behaviors
+index da9bcc41a77..1f455a067a3 100644
+--- a/app/Kconfig.behaviors
++++ b/app/Kconfig.behaviors
+@@ -134,3 +134,8 @@ config ZMK_BEHAVIOR_MACRO
+     bool
+     default y
+     depends on DT_HAS_ZMK_BEHAVIOR_MACRO_ENABLED || DT_HAS_ZMK_BEHAVIOR_MACRO_ONE_PARAM_ENABLED || DT_HAS_ZMK_BEHAVIOR_MACRO_TWO_PARAM_ENABLED
++
++config ZMK_BEHAVIOR_TRI_STATE
++    bool
++    default y
++    depends on DT_HAS_ZMK_BEHAVIOR_TRI_STATE_ENABLED
+diff --git a/app/dts/bindings/behaviors/zmk,behavior-tri-state.yaml b/app/dts/bindings/behaviors/zmk,behavior-tri-state.yaml
+new file mode 100644
+index 00000000000..bf9eb5d534c
+--- /dev/null
++++ b/app/dts/bindings/behaviors/zmk,behavior-tri-state.yaml
+@@ -0,0 +1,27 @@
++# Copyright (c) 2022 The ZMK Contributors
++# SPDX-License-Identifier: MIT
++
++description: Tri-State Behavior
++
++compatible: "zmk,behavior-tri-state"
++
++include: zero_param.yaml
++
++properties:
++  bindings:
++    type: phandle-array
++    required: true
++  ignored-key-positions:
++    type: array
++    required: false
++    default: []
++  ignored-layers:
++    type: array
++    required: false
++    default: []
++  timeout-ms:
++    type: int
++    default: -1
++  tap-ms:
++    type: int
++    default: 5
+diff --git a/app/src/behaviors/behavior_tri_state.c b/app/src/behaviors/behavior_tri_state.c
+new file mode 100644
+index 00000000000..f6af44802f5
+--- /dev/null
++++ b/app/src/behaviors/behavior_tri_state.c
+@@ -0,0 +1,300 @@
++/*
++ * Copyright (c) 2022 The ZMK Contributors
++ *
++ * SPDX-License-Identifier: MIT
++ */
++
++#define DT_DRV_COMPAT zmk_behavior_tri_state
++
++#include <zephyr/device.h>
++#include <drivers/behavior.h>
++#include <zephyr/logging/log.h>
++#include <zmk/behavior.h>
++#include <zmk/behavior_queue.h>
++#include <zmk/keymap.h>
++#include <zmk/matrix.h>
++#include <zmk/event_manager.h>
++#include <zmk/events/position_state_changed.h>
++#include <zmk/events/layer_state_changed.h>
++#include <zmk/hid.h>
++
++LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
++
++#if DT_HAS_COMPAT_STATUS_OKAY(DT_DRV_COMPAT)
++
++#define ZMK_BHV_MAX_ACTIVE_TRI_STATES 10
++
++struct behavior_tri_state_config {
++    int32_t ignored_key_positions_len;
++    int32_t ignored_layers_len;
++    struct zmk_behavior_binding *behaviors;
++    size_t behavior_count;
++    int32_t ignored_layers;
++    int32_t timeout_ms;
++    int tap_ms;
++    uint8_t ignored_key_positions[];
++};
++
++struct active_tri_state {
++    bool is_active;
++    bool is_pressed;
++    bool first_press;
++    uint32_t position;
++    const struct behavior_tri_state_config *config;
++    struct k_work_delayable release_timer;
++    int64_t release_at;
++    bool timer_started;
++    bool timer_cancelled;
++};
++
++static int stop_timer(struct active_tri_state *tri_state) {
++    int timer_cancel_result = k_work_cancel_delayable(&tri_state->release_timer);
++    if (timer_cancel_result == -EINPROGRESS) {
++        // too late to cancel, we'll let the timer handler clear up.
++        tri_state->timer_cancelled = true;
++    }
++    return timer_cancel_result;
++}
++
++static void reset_timer(int32_t timestamp, struct active_tri_state *tri_state) {
++    tri_state->release_at = timestamp + tri_state->config->timeout_ms;
++    int32_t ms_left = tri_state->release_at - k_uptime_get();
++    if (ms_left > 0) {
++        k_work_schedule(&tri_state->release_timer, K_MSEC(ms_left));
++        LOG_DBG("Successfully reset tri-state timer");
++    }
++}
++
++void trigger_end_behavior(struct active_tri_state *si) {
++    struct zmk_behavior_binding_event ev = {.position = si->position, .timestamp = k_uptime_get()};
++    zmk_behavior_queue_add(&ev, si->config->behaviors[2], true, si->config->tap_ms);
++    zmk_behavior_queue_add(&ev, si->config->behaviors[2], false, 0);
++}
++
++void behavior_tri_state_timer_handler(struct k_work *item) {
++    struct k_work_delayable *d_work = k_work_delayable_from_work(item);
++    struct active_tri_state *tri_state =
++        CONTAINER_OF(d_work, struct active_tri_state, release_timer);
++    if (!tri_state->is_active || tri_state->timer_cancelled || tri_state->is_pressed) {
++        return;
++    }
++    LOG_DBG("Tri-state deactivated due to timer");
++    tri_state->is_active = false;
++    trigger_end_behavior(tri_state);
++}
++
++static void clear_tri_state(struct active_tri_state *tri_state) { tri_state->is_active = false; }
++
++struct active_tri_state active_tri_states[ZMK_BHV_MAX_ACTIVE_TRI_STATES] = {};
++
++static struct active_tri_state *find_tri_state(uint32_t position) {
++    for (int i = 0; i < ZMK_BHV_MAX_ACTIVE_TRI_STATES; i++) {
++        if (active_tri_states[i].position == position && active_tri_states[i].is_active) {
++            return &active_tri_states[i];
++        }
++    }
++    return NULL;
++}
++
++static int new_tri_state(uint32_t position, const struct behavior_tri_state_config *config,
++                         struct active_tri_state **tri_state) {
++    for (int i = 0; i < ZMK_BHV_MAX_ACTIVE_TRI_STATES; i++) {
++        struct active_tri_state *const ref_tri_state = &active_tri_states[i];
++        if (!ref_tri_state->is_active) {
++            ref_tri_state->position = position;
++            ref_tri_state->config = config;
++            ref_tri_state->is_active = true;
++            ref_tri_state->is_pressed = false;
++            ref_tri_state->first_press = true;
++            *tri_state = ref_tri_state;
++            return 0;
++        }
++    }
++    return -ENOMEM;
++}
++
++static bool is_other_key_ignored(struct active_tri_state *tri_state, int32_t position) {
++    for (int i = 0; i < tri_state->config->ignored_key_positions_len; i++) {
++        if (tri_state->config->ignored_key_positions[i] == position) {
++            return true;
++        }
++    }
++    return false;
++}
++
++static bool is_layer_ignored(struct active_tri_state *tri_state, int32_t layer) {
++    if ((BIT(layer) & tri_state->config->ignored_layers) != 0U) {
++        return true;
++    }
++    return false;
++}
++
++static int on_tri_state_binding_pressed(struct zmk_behavior_binding *binding,
++                                        struct zmk_behavior_binding_event event) {
++    const struct device *dev = device_get_binding(binding->behavior_dev);
++    const struct behavior_tri_state_config *cfg = dev->config;
++    struct active_tri_state *tri_state;
++    tri_state = find_tri_state(event.position);
++    if (tri_state == NULL) {
++        if (new_tri_state(event.position, cfg, &tri_state) == -ENOMEM) {
++            LOG_ERR("Unable to create new tri_state. Insufficient space in "
++                    "active_tri_states[].");
++            return ZMK_BEHAVIOR_OPAQUE;
++        }
++        LOG_DBG("%d created new tri_state", event.position);
++    }
++    LOG_DBG("%d tri_state pressed", event.position);
++    tri_state->is_pressed = true;
++    if (tri_state->first_press) {
++        behavior_keymap_binding_pressed(&cfg->behaviors[0], event);
++        behavior_keymap_binding_released(&cfg->behaviors[0], event);
++        tri_state->first_press = false;
++    }
++    behavior_keymap_binding_pressed(&cfg->behaviors[1], event);
++    return ZMK_BEHAVIOR_OPAQUE;
++}
++
++static void release_tri_state(struct zmk_behavior_binding_event event,
++                              struct zmk_behavior_binding *behavior) {
++    struct active_tri_state *tri_state = find_tri_state(event.position);
++    if (tri_state == NULL) {
++        return;
++    }
++    tri_state->is_pressed = false;
++    behavior_keymap_binding_released(behavior, event);
++    reset_timer(k_uptime_get(), tri_state);
++}
++
++static int on_tri_state_binding_released(struct zmk_behavior_binding *binding,
++                                         struct zmk_behavior_binding_event event) {
++    const struct device *dev = device_get_binding(binding->behavior_dev);
++    const struct behavior_tri_state_config *cfg = dev->config;
++    LOG_DBG("%d tri_state keybind released", event.position);
++    release_tri_state(event, &cfg->behaviors[1]);
++    return ZMK_BEHAVIOR_OPAQUE;
++}
++
++static int behavior_tri_state_init(const struct device *dev) {
++    static bool init_first_run = true;
++    if (init_first_run) {
++        for (int i = 0; i < ZMK_BHV_MAX_ACTIVE_TRI_STATES; i++) {
++            k_work_init_delayable(&active_tri_states[i].release_timer,
++                                  behavior_tri_state_timer_handler);
++            clear_tri_state(&active_tri_states[i]);
++        }
++    }
++    init_first_run = false;
++    return 0;
++}
++
++static const struct behavior_driver_api behavior_tri_state_driver_api = {
++    .binding_pressed = on_tri_state_binding_pressed,
++    .binding_released = on_tri_state_binding_released,
++};
++
++static int tri_state_listener(const zmk_event_t *eh);
++static int tri_state_position_state_changed_listener(const zmk_event_t *eh);
++static int tri_state_layer_state_changed_listener(const zmk_event_t *eh);
++
++ZMK_LISTENER(behavior_tri_state, tri_state_listener);
++ZMK_SUBSCRIPTION(behavior_tri_state, zmk_position_state_changed);
++ZMK_SUBSCRIPTION(behavior_tri_state, zmk_layer_state_changed);
++
++static int tri_state_listener(const zmk_event_t *eh) {
++    if (as_zmk_position_state_changed(eh) != NULL) {
++        return tri_state_position_state_changed_listener(eh);
++    } else if (as_zmk_layer_state_changed(eh) != NULL) {
++        return tri_state_layer_state_changed_listener(eh);
++    }
++    return ZMK_EV_EVENT_BUBBLE;
++}
++
++static int tri_state_position_state_changed_listener(const zmk_event_t *eh) {
++    struct zmk_position_state_changed *ev = as_zmk_position_state_changed(eh);
++    if (ev == NULL) {
++        return ZMK_EV_EVENT_BUBBLE;
++    }
++    for (int i = 0; i < ZMK_BHV_MAX_ACTIVE_TRI_STATES; i++) {
++        struct active_tri_state *tri_state = &active_tri_states[i];
++        if (!tri_state->is_active) {
++            continue;
++        }
++        if (tri_state->position == ev->position) {
++            continue;
++        }
++        if (!is_other_key_ignored(tri_state, ev->position)) {
++            LOG_DBG("Tri-State interrupted, ending at %d %d", tri_state->position, ev->position);
++            tri_state->is_active = false;
++            struct zmk_behavior_binding_event event = {.position = tri_state->position,
++                                                       .timestamp = k_uptime_get()};
++            if (tri_state->is_pressed) {
++                behavior_keymap_binding_released(&tri_state->config->behaviors[1], event);
++            }
++            trigger_end_behavior(tri_state);
++            return ZMK_EV_EVENT_BUBBLE;
++        }
++        if (ev->state) {
++            stop_timer(tri_state);
++        } else {
++            reset_timer(ev->timestamp, tri_state);
++        }
++    }
++    return ZMK_EV_EVENT_BUBBLE;
++}
++
++static int tri_state_layer_state_changed_listener(const zmk_event_t *eh) {
++    struct zmk_layer_state_changed *ev = as_zmk_layer_state_changed(eh);
++    if (ev == NULL) {
++        return ZMK_EV_EVENT_BUBBLE;
++    }
++    if (!ev->state) {
++        return ZMK_EV_EVENT_BUBBLE;
++    }
++    for (int i = 0; i < ZMK_BHV_MAX_ACTIVE_TRI_STATES; i++) {
++        struct active_tri_state *tri_state = &active_tri_states[i];
++        if (!tri_state->is_active) {
++            continue;
++        }
++        if (!is_layer_ignored(tri_state, ev->layer)) {
++            LOG_DBG("Tri-State layer changed, ending at %d %d", tri_state->position, ev->layer);
++            tri_state->is_active = false;
++            struct zmk_behavior_binding_event event = {.position = tri_state->position,
++                                                       .timestamp = k_uptime_get()};
++            if (tri_state->is_pressed) {
++                behavior_keymap_binding_released(&tri_state->config->behaviors[1], event);
++            }
++            behavior_keymap_binding_pressed(&tri_state->config->behaviors[2], event);
++            behavior_keymap_binding_released(&tri_state->config->behaviors[2], event);
++            return ZMK_EV_EVENT_BUBBLE;
++        }
++    }
++    return ZMK_EV_EVENT_BUBBLE;
++}
++
++#define _TRANSFORM_ENTRY(idx, node) ZMK_KEYMAP_EXTRACT_BINDING(idx, node)
++
++#define TRANSFORMED_BINDINGS(node)                                                                 \
++    {LISTIFY(DT_INST_PROP_LEN(node, bindings), _TRANSFORM_ENTRY, (, ), DT_DRV_INST(node))}
++
++#define IF_BIT(n, prop, i) BIT(DT_PROP_BY_IDX(n, prop, i)) |
++
++#define TRI_STATE_INST(n)                                                                          \
++    static struct zmk_behavior_binding                                                             \
++        behavior_tri_state_config_##n##_bindings[DT_INST_PROP_LEN(n, bindings)] =                  \
++            TRANSFORMED_BINDINGS(n);                                                               \
++    static struct behavior_tri_state_config behavior_tri_state_config_##n = {                      \
++        .ignored_key_positions = DT_INST_PROP(n, ignored_key_positions),                           \
++        .ignored_key_positions_len = DT_INST_PROP_LEN(n, ignored_key_positions),                   \
++        .ignored_layers = DT_INST_FOREACH_PROP_ELEM(n, ignored_layers, IF_BIT) 0,                  \
++        .ignored_layers_len = DT_INST_PROP_LEN(n, ignored_layers),                                 \
++        .timeout_ms = DT_INST_PROP(n, timeout_ms),                                                 \
++        .tap_ms = DT_INST_PROP(n, tap_ms),                                                         \
++        .behaviors = behavior_tri_state_config_##n##_bindings,                                     \
++        .behavior_count = DT_INST_PROP_LEN(n, bindings)};                                          \
++    BEHAVIOR_DT_INST_DEFINE(n, behavior_tri_state_init, NULL, NULL,                                \
++                            &behavior_tri_state_config_##n, POST_KERNEL,                           \
++                            CONFIG_KERNEL_INIT_PRIORITY_DEFAULT, &behavior_tri_state_driver_api);
++
++DT_INST_FOREACH_STATUS_OKAY(TRI_STATE_INST)
++
++#endif
+diff --git a/app/tests/tri-state/behavior_keymap.dtsi b/app/tests/tri-state/behavior_keymap.dtsi
+new file mode 100644
+index 00000000000..9d82aa011d5
+--- /dev/null
++++ b/app/tests/tri-state/behavior_keymap.dtsi
+@@ -0,0 +1,40 @@
++#include <dt-bindings/zmk/keys.h>
++#include <behaviors.dtsi>
++#include <dt-bindings/zmk/kscan_mock.h>
++
++/ {
++    behaviors {
++        swap: swap {
++            compatible = "zmk,behavior-tri-state";
++            label = "SWAPPER";
++            #binding-cells = <0>;
++            bindings = <&kt LALT>, <&kp TAB>, <&kt LALT>;
++            ignored-key-positions = <2 3>;
++            ignored-layers = <1>;
++            timeout-ms = <200>;
++        };
++    };
++
++    keymap {
++        compatible = "zmk,keymap";
++        label ="Default keymap";
++
++        default_layer {
++            bindings = <
++                &swap    &kp A
++                &kp B    &tog 1>;
++        };
++
++        extra_layer {
++            bindings = <
++                &kp A     &kp B
++                &tog 2    &trans>;
++        };
++
++        extra_layer2 {
++            bindings = <
++                &kp N1    &kp N2
++                &trans     &kp N3>;
++        };
++    };
++};
+diff --git a/app/tests/tri-state/swapper-int-shared-key/events.patterns b/app/tests/tri-state/swapper-int-shared-key/events.patterns
+new file mode 100644
+index 00000000000..44d7740469f
+--- /dev/null
++++ b/app/tests/tri-state/swapper-int-shared-key/events.patterns
+@@ -0,0 +1,2 @@
++s/.*hid_listener_keycode/kp/p
++s/.*on_tri_state_binding/tri_state_binding/p
+diff --git a/app/tests/tri-state/swapper-int-shared-key/keycode_events.snapshot b/app/tests/tri-state/swapper-int-shared-key/keycode_events.snapshot
+new file mode 100644
+index 00000000000..688683b410f
+--- /dev/null
++++ b/app/tests/tri-state/swapper-int-shared-key/keycode_events.snapshot
+@@ -0,0 +1,19 @@
++tri_state_binding_pressed: 0 created new tri_state
++tri_state_binding_pressed: 0 tri_state pressed
++kp_pressed: usage_page 0x07 keycode 0xE2 implicit_mods 0x00 explicit_mods 0x00
++kp_pressed: usage_page 0x07 keycode 0x2B implicit_mods 0x00 explicit_mods 0x00
++tri_state_binding_released: 0 tri_state keybind released
++kp_released: usage_page 0x07 keycode 0x2B implicit_mods 0x00 explicit_mods 0x00
++tri_state_binding_pressed: 0 tri_state pressed
++kp_pressed: usage_page 0x07 keycode 0x2B implicit_mods 0x00 explicit_mods 0x00
++tri_state_binding_released: 0 tri_state keybind released
++kp_released: usage_page 0x07 keycode 0x2B implicit_mods 0x00 explicit_mods 0x00
++tri_state_binding_pressed: 0 tri_state pressed
++kp_pressed: usage_page 0x07 keycode 0x2B implicit_mods 0x00 explicit_mods 0x00
++tri_state_binding_released: 0 tri_state keybind released
++kp_released: usage_page 0x07 keycode 0x2B implicit_mods 0x00 explicit_mods 0x00
++kp_pressed: usage_page 0x07 keycode 0x05 implicit_mods 0x00 explicit_mods 0x00
++kp_released: usage_page 0x07 keycode 0x05 implicit_mods 0x00 explicit_mods 0x00
++kp_released: usage_page 0x07 keycode 0xE2 implicit_mods 0x00 explicit_mods 0x00
++kp_pressed: usage_page 0x07 keycode 0x04 implicit_mods 0x00 explicit_mods 0x00
++kp_released: usage_page 0x07 keycode 0x04 implicit_mods 0x00 explicit_mods 0x00
+diff --git a/app/tests/tri-state/swapper-int-shared-key/native_posix_64.keymap b/app/tests/tri-state/swapper-int-shared-key/native_posix_64.keymap
+new file mode 100644
+index 00000000000..a18e16a8695
+--- /dev/null
++++ b/app/tests/tri-state/swapper-int-shared-key/native_posix_64.keymap
+@@ -0,0 +1,19 @@
++#include <dt-bindings/zmk/keys.h>
++#include <behaviors.dtsi>
++#include <dt-bindings/zmk/kscan_mock.h>
++#include "../behavior_keymap.dtsi"
++
++&kscan {
++    events = <
++    ZMK_MOCK_PRESS(0,0,10)
++    ZMK_MOCK_RELEASE(0,0,10)
++    ZMK_MOCK_PRESS(0,0,10)
++    ZMK_MOCK_RELEASE(0,0,10)
++    ZMK_MOCK_PRESS(0,0,10)
++    ZMK_MOCK_RELEASE(0,0,10)
++    ZMK_MOCK_PRESS(1,0,10)
++    ZMK_MOCK_RELEASE(1,0,10)
++    ZMK_MOCK_PRESS(0,1,10)
++    ZMK_MOCK_RELEASE(0,1,1000)
++    >;
++};
+diff --git a/app/tests/tri-state/swapper-int-shared-layer/events.patterns b/app/tests/tri-state/swapper-int-shared-layer/events.patterns
+new file mode 100644
+index 00000000000..44d7740469f
+--- /dev/null
++++ b/app/tests/tri-state/swapper-int-shared-layer/events.patterns
+@@ -0,0 +1,2 @@
++s/.*hid_listener_keycode/kp/p
++s/.*on_tri_state_binding/tri_state_binding/p
+diff --git a/app/tests/tri-state/swapper-int-shared-layer/keycode_events.snapshot b/app/tests/tri-state/swapper-int-shared-layer/keycode_events.snapshot
+new file mode 100644
+index 00000000000..6f08cc1f765
+--- /dev/null
++++ b/app/tests/tri-state/swapper-int-shared-layer/keycode_events.snapshot
+@@ -0,0 +1,17 @@
++tri_state_binding_pressed: 0 created new tri_state
++tri_state_binding_pressed: 0 tri_state pressed
++kp_pressed: usage_page 0x07 keycode 0xE2 implicit_mods 0x00 explicit_mods 0x00
++kp_pressed: usage_page 0x07 keycode 0x2B implicit_mods 0x00 explicit_mods 0x00
++tri_state_binding_released: 0 tri_state keybind released
++kp_released: usage_page 0x07 keycode 0x2B implicit_mods 0x00 explicit_mods 0x00
++tri_state_binding_pressed: 0 tri_state pressed
++kp_pressed: usage_page 0x07 keycode 0x2B implicit_mods 0x00 explicit_mods 0x00
++tri_state_binding_released: 0 tri_state keybind released
++kp_released: usage_page 0x07 keycode 0x2B implicit_mods 0x00 explicit_mods 0x00
++tri_state_binding_pressed: 0 tri_state pressed
++kp_pressed: usage_page 0x07 keycode 0x2B implicit_mods 0x00 explicit_mods 0x00
++tri_state_binding_released: 0 tri_state keybind released
++kp_released: usage_page 0x07 keycode 0x2B implicit_mods 0x00 explicit_mods 0x00
++kp_pressed: usage_page 0x07 keycode 0x04 implicit_mods 0x00 explicit_mods 0x00
++kp_released: usage_page 0x07 keycode 0x04 implicit_mods 0x00 explicit_mods 0x00
++kp_released: usage_page 0x07 keycode 0xE2 implicit_mods 0x00 explicit_mods 0x00
+diff --git a/app/tests/tri-state/swapper-int-shared-layer/native_posix_64.keymap b/app/tests/tri-state/swapper-int-shared-layer/native_posix_64.keymap
+new file mode 100644
+index 00000000000..ed13d8d9b83
+--- /dev/null
++++ b/app/tests/tri-state/swapper-int-shared-layer/native_posix_64.keymap
+@@ -0,0 +1,21 @@
++#include <dt-bindings/zmk/keys.h>
++#include <behaviors.dtsi>
++#include <dt-bindings/zmk/kscan_mock.h>
++#include "../behavior_keymap.dtsi"
++
++&kscan {
++    events = <
++    ZMK_MOCK_PRESS(0,0,10)
++    ZMK_MOCK_RELEASE(0,0,10)
++    ZMK_MOCK_PRESS(0,0,10)
++    ZMK_MOCK_RELEASE(0,0,10)
++    ZMK_MOCK_PRESS(0,0,10)
++    ZMK_MOCK_RELEASE(0,0,10)
++    ZMK_MOCK_PRESS(1,1,10)
++    ZMK_MOCK_RELEASE(1,1,10)
++    ZMK_MOCK_PRESS(0,0,10)
++    ZMK_MOCK_RELEASE(0,0,10)
++    ZMK_MOCK_PRESS(1,0,10)
++    ZMK_MOCK_RELEASE(1,0,10)
++    >;
++};
+diff --git a/app/tests/tri-state/swapper-int/events.patterns b/app/tests/tri-state/swapper-int/events.patterns
+new file mode 100644
+index 00000000000..44d7740469f
+--- /dev/null
++++ b/app/tests/tri-state/swapper-int/events.patterns
+@@ -0,0 +1,2 @@
++s/.*hid_listener_keycode/kp/p
++s/.*on_tri_state_binding/tri_state_binding/p
+diff --git a/app/tests/tri-state/swapper-int/keycode_events.snapshot b/app/tests/tri-state/swapper-int/keycode_events.snapshot
+new file mode 100644
+index 00000000000..6dc67300a1c
+--- /dev/null
++++ b/app/tests/tri-state/swapper-int/keycode_events.snapshot
+@@ -0,0 +1,17 @@
++tri_state_binding_pressed: 0 created new tri_state
++tri_state_binding_pressed: 0 tri_state pressed
++kp_pressed: usage_page 0x07 keycode 0xE2 implicit_mods 0x00 explicit_mods 0x00
++kp_pressed: usage_page 0x07 keycode 0x2B implicit_mods 0x00 explicit_mods 0x00
++tri_state_binding_released: 0 tri_state keybind released
++kp_released: usage_page 0x07 keycode 0x2B implicit_mods 0x00 explicit_mods 0x00
++tri_state_binding_pressed: 0 tri_state pressed
++kp_pressed: usage_page 0x07 keycode 0x2B implicit_mods 0x00 explicit_mods 0x00
++tri_state_binding_released: 0 tri_state keybind released
++kp_released: usage_page 0x07 keycode 0x2B implicit_mods 0x00 explicit_mods 0x00
++tri_state_binding_pressed: 0 tri_state pressed
++kp_pressed: usage_page 0x07 keycode 0x2B implicit_mods 0x00 explicit_mods 0x00
++tri_state_binding_released: 0 tri_state keybind released
++kp_released: usage_page 0x07 keycode 0x2B implicit_mods 0x00 explicit_mods 0x00
++kp_released: usage_page 0x07 keycode 0xE2 implicit_mods 0x00 explicit_mods 0x00
++kp_pressed: usage_page 0x07 keycode 0x04 implicit_mods 0x00 explicit_mods 0x00
++kp_released: usage_page 0x07 keycode 0x04 implicit_mods 0x00 explicit_mods 0x00
+diff --git a/app/tests/tri-state/swapper-int/native_posix_64.keymap b/app/tests/tri-state/swapper-int/native_posix_64.keymap
+new file mode 100644
+index 00000000000..49341d092f2
+--- /dev/null
++++ b/app/tests/tri-state/swapper-int/native_posix_64.keymap
+@@ -0,0 +1,17 @@
++#include <dt-bindings/zmk/keys.h>
++#include <behaviors.dtsi>
++#include <dt-bindings/zmk/kscan_mock.h>
++#include "../behavior_keymap.dtsi"
++
++&kscan {
++    events = <
++    ZMK_MOCK_PRESS(0,0,10)
++    ZMK_MOCK_RELEASE(0,0,10)
++    ZMK_MOCK_PRESS(0,0,10)
++    ZMK_MOCK_RELEASE(0,0,10)
++    ZMK_MOCK_PRESS(0,0,10)
++    ZMK_MOCK_RELEASE(0,0,10)
++    ZMK_MOCK_PRESS(0,1,10)
++    ZMK_MOCK_RELEASE(0,1,1000)
++    >;
++};
+diff --git a/app/tests/tri-state/swapper/events.patterns b/app/tests/tri-state/swapper/events.patterns
+new file mode 100644
+index 00000000000..44d7740469f
+--- /dev/null
++++ b/app/tests/tri-state/swapper/events.patterns
+@@ -0,0 +1,2 @@
++s/.*hid_listener_keycode/kp/p
++s/.*on_tri_state_binding/tri_state_binding/p
+diff --git a/app/tests/tri-state/swapper/keycode_events.snapshot b/app/tests/tri-state/swapper/keycode_events.snapshot
+new file mode 100644
+index 00000000000..67935076447
+--- /dev/null
++++ b/app/tests/tri-state/swapper/keycode_events.snapshot
+@@ -0,0 +1,14 @@
++tri_state_binding_pressed: 0 created new tri_state
++tri_state_binding_pressed: 0 tri_state pressed
++kp_pressed: usage_page 0x07 keycode 0xE2 implicit_mods 0x00 explicit_mods 0x00
++kp_pressed: usage_page 0x07 keycode 0x2B implicit_mods 0x00 explicit_mods 0x00
++tri_state_binding_released: 0 tri_state keybind released
++kp_released: usage_page 0x07 keycode 0x2B implicit_mods 0x00 explicit_mods 0x00
++tri_state_binding_pressed: 0 tri_state pressed
++kp_pressed: usage_page 0x07 keycode 0x2B implicit_mods 0x00 explicit_mods 0x00
++tri_state_binding_released: 0 tri_state keybind released
++kp_released: usage_page 0x07 keycode 0x2B implicit_mods 0x00 explicit_mods 0x00
++tri_state_binding_pressed: 0 tri_state pressed
++kp_pressed: usage_page 0x07 keycode 0x2B implicit_mods 0x00 explicit_mods 0x00
++tri_state_binding_released: 0 tri_state keybind released
++kp_released: usage_page 0x07 keycode 0x2B implicit_mods 0x00 explicit_mods 0x00
+diff --git a/app/tests/tri-state/swapper/native_posix_64.keymap b/app/tests/tri-state/swapper/native_posix_64.keymap
+new file mode 100644
+index 00000000000..d4d4c9478e9
+--- /dev/null
++++ b/app/tests/tri-state/swapper/native_posix_64.keymap
+@@ -0,0 +1,15 @@
++#include <dt-bindings/zmk/keys.h>
++#include <behaviors.dtsi>
++#include <dt-bindings/zmk/kscan_mock.h>
++#include "../behavior_keymap.dtsi"
++
++&kscan {
++    events = <
++    ZMK_MOCK_PRESS(0,0,10)
++    ZMK_MOCK_RELEASE(0,0,10)
++    ZMK_MOCK_PRESS(0,0,10)
++    ZMK_MOCK_RELEASE(0,0,10)
++    ZMK_MOCK_PRESS(0,0,10)
++    ZMK_MOCK_RELEASE(0,0,10)
++    >;
++};
+diff --git a/app/tests/tri-state/timeout/events.patterns b/app/tests/tri-state/timeout/events.patterns
+new file mode 100644
+index 00000000000..44d7740469f
+--- /dev/null
++++ b/app/tests/tri-state/timeout/events.patterns
+@@ -0,0 +1,2 @@
++s/.*hid_listener_keycode/kp/p
++s/.*on_tri_state_binding/tri_state_binding/p
+diff --git a/app/tests/tri-state/timeout/keycode_events.snapshot b/app/tests/tri-state/timeout/keycode_events.snapshot
+new file mode 100644
+index 00000000000..6403bfc80cc
+--- /dev/null
++++ b/app/tests/tri-state/timeout/keycode_events.snapshot
+@@ -0,0 +1,7 @@
++tri_state_binding_pressed: 0 created new tri_state
++tri_state_binding_pressed: 0 tri_state pressed
++kp_pressed: usage_page 0x07 keycode 0xE2 implicit_mods 0x00 explicit_mods 0x00
++kp_pressed: usage_page 0x07 keycode 0x2B implicit_mods 0x00 explicit_mods 0x00
++tri_state_binding_released: 0 tri_state keybind released
++kp_released: usage_page 0x07 keycode 0x2B implicit_mods 0x00 explicit_mods 0x00
++kp_released: usage_page 0x07 keycode 0xE2 implicit_mods 0x00 explicit_mods 0x00
+diff --git a/app/tests/tri-state/timeout/native_posix_64.keymap b/app/tests/tri-state/timeout/native_posix_64.keymap
+new file mode 100644
+index 00000000000..48098159700
+--- /dev/null
++++ b/app/tests/tri-state/timeout/native_posix_64.keymap
+@@ -0,0 +1,11 @@
++#include <dt-bindings/zmk/keys.h>
++#include <behaviors.dtsi>
++#include <dt-bindings/zmk/kscan_mock.h>
++#include "../behavior_keymap.dtsi"
++
++&kscan {
++    events = <
++    ZMK_MOCK_PRESS(0,0,10)
++    ZMK_MOCK_RELEASE(0,0,1000)
++    >;
++};
+diff --git a/docs/docs/keymaps/behaviors/tri-state.md b/docs/docs/keymaps/behaviors/tri-state.md
+new file mode 100644
+index 00000000000..2848a141a97
+--- /dev/null
++++ b/docs/docs/keymaps/behaviors/tri-state.md
+@@ -0,0 +1,130 @@
++---
++title: Tri-State Behavior
++sidebar_label: Tri-State
++---
++
++## Summary
++
++Tri-States are a way to have something persist while other behaviors occur.
++
++The tri-state key will fire the 'start' behavior when the key is pressed for the first time. Subsequent presses of the same key will output the second, 'continue' behavior, and any key position or layer state change that is not specified (see below) will trigger the 'interrupt behavior'.
++
++### Basic Usage
++
++The following is a basic definition of a tri-state:
++
++```
++/ {
++    behaviors {
++        tri-state: tri-state {
++            compatible = "zmk,behavior-tri-state";
++            label = "TRI-STATE";
++            #binding-cells = <0>;
++            bindings = <&kp A>, <&kp B>, <&kt C>;
++        };
++    };
++
++    keymap {
++        compatible = "zmk,keymap";
++        label ="Default keymap";
++
++        default_layer {
++            bindings = <
++                &tri-state  &kp D
++                &kp E       &kp F>;
++        };
++    };
++};
++```
++
++Pressing `tri-state` will fire the first behavior, and output `A`, as well as the second behavior, outputting `B`. Subsequent presses of `tri-state` will output `B`. When another key is pressed or a layer change occurs, the third, 'interrupt' behavior will fire.
++
++### Advanced Configuration
++
++#### `timeout-ms`
++
++Setting `timeout-ms` will cause the deactivation behavior to fire when the time has elapsed after releasing the Tri-State or a ignored key.
++
++#### `ignored-key-positions`
++
++- Including `ignored-key-positions` in your tri-state definition will let the key positions specified NOT trigger the interrupt behavior when a tri-state is active.
++- Pressing any key **NOT** listed in `ignored-key-positions` will cause the interrupt behavior to fire.
++- Note that `ignored-key-positions` is an array of key position indexes. Key positions are numbered according to your keymap, starting with 0. So if the first key in your keymap is Q, this key is in position 0. The next key (probably W) will be in position 1, et cetera.
++- See the following example, which is an implementation of the popular [Swapper](https://github.com/callum-oakley/qmk_firmware/tree/master/users/callum) from Callum Oakley:
++
++```
++/ {
++    behaviors {
++        swap: swapper {
++            compatible = "zmk,behavior-tri-state";
++            label = "SWAPPER";
++            #binding-cells = <0>;
++            bindings = <&kt LALT>, <&kp TAB>, <&kt LALT>;
++            ignored-key-positions = <1>;
++        };
++    };
++
++    keymap {
++        compatible = "zmk,keymap";
++        label ="Default keymap";
++
++        default_layer {
++            bindings = <
++                &swap    &kp LS(TAB)
++                &kp B    &kp C>;
++        };
++    };
++};
++```
++
++- The sequence `(swap, swap, LS(TAB))` produces `(LA(TAB), LA(TAB), LA(LS(TAB)))`. The LS(TAB) behavior does not fire the interrupt behavior, because it is included in `ignored-key-positions`.
++- The sequence `(swap, swap, B)` produces `(LA(TAB), LA(TAB), B)`. The B behavior **does** fire the interrupt behavior, because it is **not** included in `ignored-key-positions`.
++
++#### `ignored-layers`
++
++- By default, any layer change will trigger the end behavior.
++- Including `ignored-layers` in your tri-state definition will let the specified layers NOT trigger the end behavior when they become active (include the layer the behavior is on to accommodate for layer toggling).
++- Activating any layer **NOT** listed in `ignored-layers` will cause the interrupt behavior to fire.
++- Note that `ignored-layers` is an array of layer indexes. Layers are numbered according to your keymap, starting with 0. The first layer in your keymap is layer 0. The next layer will be layer 1, et cetera.
++- Looking back at the swapper implementation, we can see how `ignored-layers` can affect things
++
++```
++/ {
++    behaviors {
++        swap: swapper {
++            compatible = "zmk,behavior-tri-state";
++            label = "SWAPPER";
++            #binding-cells = <0>;
++            bindings = <&kt LALT>, <&kp TAB>, <&kt LALT>;
++            ignored-key-positions = <1 2 3>;
++            ignored-layers = <1>;
++        };
++    };
++
++    keymap {
++        compatible = "zmk,keymap";
++        label ="Default keymap";
++
++        default_layer {
++            bindings = <
++                &swap    &kp LS(TAB)
++                &kp B    &tog 1>;
++        };
++
++        layer2 {
++            bindings = <
++                &kp DOWN    &kp B
++                &tog 2    &trans>;
++        };
++
++        layer3 {
++            bindings = <
++                &kp LEFT  &kp N2
++                &trans    &kp N3>;
++        };
++    };
++};
++```
++
++- The sequence `(swap, tog 1, DOWN)` produces `(LA(TAB), LA(DOWN))`. The change to layer 1 does not fire the interrupt behavior, because it is included in `ignored-layers`, and DOWN is in the same position as the tri-state, also not firing the interrupt behavior.
++- The sequence `(swap, tog 1, tog 2, LEFT)` produces `(LA(TAB), LEFT`. The change to layer 2 **does** fire the interrupt behavior, because it is not included in `ignored-layers`.
+diff --git a/docs/sidebars.js b/docs/sidebars.js
+index 51c140b68cd..4ed23e59b51 100644
+--- a/docs/sidebars.js
++++ b/docs/sidebars.js
+@@ -74,6 +74,7 @@ module.exports = {
+             "keymaps/behaviors/key-toggle",
+             "keymaps/behaviors/sticky-key",
+             "keymaps/behaviors/sticky-layer",
++            "keymaps/behaviors/tri-state",
+             "keymaps/behaviors/tap-dance",
+             "keymaps/behaviors/caps-word",
+             "keymaps/behaviors/key-repeat",

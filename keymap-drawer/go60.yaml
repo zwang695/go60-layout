@@ -29,33 +29,66 @@ layers:
     - SPACE
     - One Shot Shift
   Cursor:
-  - ['', ESC, INS, Shift Tab, DEL, '', '', '', APP, Screenshot, Area Screenshot, '']
-  - [CAPS, RET, Redo, Undo, BSPC, Cut, Cut, Shift Tab, Undo, Redo, TAB, Copy Area Screenshot]
-  - - One Shot Shift
+  - - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+  - - {t: ▽, type: trans}
+    - Cmd+R
+    - Prev Tab
+    - Next Tab
+    - Browser Back
+    - Browser Forward
+    - PG UP
+    - HOME
+    - UP
+    - END
+    - Search Selected
+    - {t: ▽, type: trans}
+  - - {t: ▽, type: trans}
     - LCTRL
     - LALT
     - LGUI
     - LSHFT
-    - Copy
-    - Copy
+    - Left Click
+    - PG DN
     - LEFT
-    - UP
     - DOWN
     - RIGHT
-    - {t: RSHFT, h: sticky}
-  - [Cmd+L, Select All, Select Line, Select Word, Find, Paste, Paste, HOME, PG UP, PG DN, END, Cmd+L]
+    - Copy Area Screenshot
+    - {t: ▽, type: trans}
+  - - {t: ▽, type: trans}
+    - Undo
+    - Redo
+    - Copy
+    - Paste
+    - {t: ▽, type: trans}
+    - Cmd+L
+    - Select Word Back
+    - Select Word
+    - Select Line
+    - Copy Screenshot
+    - {t: ▽, type: trans}
   - - ''
-    - Find Prev
-    - Find Next
+    - ''
+    - ''
     - Find
     - Find Prev
     - Find Next
     - {type: held}
-    - Cmd Tab
-    - Cmd+F3
-    - Clear Select
-    - Extend Line
-    - Extend Word
+    - {t: ▽, type: trans}
+    - ''
+    - Cyclotab
+    - Cursor Lock
+    - ''
   Symbol:
   - ['`', ',', (, ), ;, ., '', '', '', '', '', '']
   - ['!', '[', '{', '}', ']', '?', '`', DEL, Shift Tab, INS, ESC, '']
