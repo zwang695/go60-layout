@@ -38,14 +38,11 @@ parse_config:
     "&cur_SELECT_WORD_BACK_macos_v1_TKZ": Select Word Back
     "&nav_SEARCH_SELECTED_macos_v1_TKZ": Search Selected
     "&cyclotab_v1_TKZ": Cyclotab
-    "&tog LAYER_Cursor": Cursor Lock
     "&tog_lock_v1_TKZ LAYER_Cursor": Cursor Lock
     "&tog LAYER_Mouse": Mouse Toggle
     "&kp LC(LS(TAB))": Prev Tab
     "&kp LC(TAB)": Next Tab
     "&kp LS(TAB)": Shift Tab
-    "&kp C_AC_BACK": Browser Back
-    "&kp C_AC_FORWARD": Browser Forward
     "&kp LG(LBKT)": Browser Back
     "&kp LG(RBKT)": Browser Forward
     "&kp LG(LS(Z))": Redo
