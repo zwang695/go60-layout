@@ -161,8 +161,8 @@ layers:
     - ''
     - ''
     - ''
-    - '0'
     - {t: Num, h: toggle}
+    - '0'
     - ''
     - ''
     - {type: held}
