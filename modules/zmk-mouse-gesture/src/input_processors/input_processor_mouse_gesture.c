@@ -644,7 +644,7 @@ static const struct zmk_input_processor_driver_api input_processor_mouse_gesture
     DEVICE_DT_INST_DEFINE(n, input_processor_mouse_gesture_init, NULL,                                \
                           &input_processor_mouse_gesture_data_##n,                                    \
                           &input_processor_mouse_gesture_config_##n, POST_KERNEL,                     \
-                          CONFIG_KERNEL_INIT_PRIORITY_DEFAULT,                                        \
+                          CONFIG_ZMK_MOUSE_GESTURE_INPUT_PROCESSOR_INIT_PRIORITY,                     \
                           &input_processor_mouse_gesture_driver_api);
 
 DT_INST_FOREACH_STATUS_OKAY(MOUSE_GESTURE_INPUT_PROCESSOR_INST)
