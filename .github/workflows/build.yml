@@ -30,8 +30,11 @@ jobs:
           set -o pipefail
           if ! nix-build config -o combined --show-trace 2>&1 | tee build.log; then
             {
-              echo 'Build failed. Last 200 log lines:'
-              tail -n 200 build.log
+              echo 'Build failed. Relevant log lines:'
+              grep -Ei '(^|[[:space:]])(error|failed|undefined|ninja:|traceback|cannot|fatal|warning: zephyr/zmk|Memory region|Converted to uf2|Wrote [0-9]+ bytes)' build.log | tail -n 120 || true
+              echo
+              echo 'Last 40 log lines:'
+              tail -n 40 build.log
             } > build-tail.log
             python3 -c 'from pathlib import Path; message = Path("build-tail.log").read_text(errors="replace")[-6000:]; message = message.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A"); print(f"::error file=.github/workflows/build.yml,line=22,title=Nix build failed::{message}")'
             exit 1
