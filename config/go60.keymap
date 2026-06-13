@@ -863,7 +863,7 @@
               &trans  &kp LCTRL        &kp LALT        &kp LGUI         &kp LSHFT          &mkp LCLK                                                                                                                         &kp PG_DN  &kp LEFT     &kp DOWN    &kp RIGHT     &kp LC(LG(LS(N4)))              &trans
               &trans   &kp LG(Z)   &kp LG(LS(Z))     &kp LG(C)        &kp LG(V)      &kp LG(LS(V))                                                                                                                          &kp LG(L)  &cur_SELECT_WORD_BACK_macos_v1_TKZ  &cur_SELECT_WORD_macos_v1_TKZ  &cur_SELECT_LINE_macos_v1_TKZ  &kp LC(LG(LS(N3)))  &trans
                                                &none                         &none             &none                                                                                                                                                          &kp LG(F)     &kp LS(LG(G))        &kp LG(G)
-                                                                                                            &trans           &trans  &none  &cyclotab_v1_TKZ  &tog LAYER_Cursor  &none
+                                                                                                            &trans           &trans  &none  &none  &cyclotab_v1_TKZ  &tog LAYER_Cursor
             >;
         };
 
