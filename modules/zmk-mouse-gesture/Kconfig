@@ -26,11 +26,3 @@ config ZMK_MOUSE_GESTURE_REL_QUEUE_LEN
 	help
 	  Size of the message queue buffering raw relative mouse movements before they
 	  are processed into gesture sequences.
-
-config ZMK_MOUSE_GESTURE_INPUT_PROCESSOR_INIT_PRIORITY
-	int "Mouse gesture input processor initialization priority"
-	default 15
-	depends on ZMK_MOUSE_GESTURE
-	help
-	  Initialization priority for the mouse gesture input processor. This must be
-	  later than behavior devices because gesture patterns reference behaviors.
