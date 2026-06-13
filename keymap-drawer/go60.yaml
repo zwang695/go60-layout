@@ -22,10 +22,10 @@ layers:
     - UP
     - DOWN
     - END
-    - {t: RET, h: Cursor}
-    - {t: BSPC, h: Symbol}
-    - One Shot Shift
-    - One Shot Shift
+    - RET
+    - {t: BSPC, h: Cursor}
+    - {t: One Shot Shift, h: Symbol}
+    - {t: One Shot Shift, h: Symbol}
     - {t: _, h: Num}
     - SPACE
   Cursor:
@@ -83,8 +83,8 @@ layers:
     - Find
     - Find Prev
     - Find Next
-    - {type: held}
     - {t: ▽, type: trans}
+    - {type: held}
     - ''
     - ''
     - Cyclotab
@@ -145,8 +145,8 @@ layers:
     - ''
     - ''
     - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
     - {type: held}
-    - ''
     - {t: ▽, type: trans}
     - {t: ▽, type: trans}
     - ''

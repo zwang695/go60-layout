@@ -45,6 +45,8 @@ parse_config:
     "&kp LS(TAB)": Shift Tab
     "&kp C_AC_BACK": Browser Back
     "&kp C_AC_FORWARD": Browser Forward
+    "&kp LG(LBKT)": Browser Back
+    "&kp LG(RBKT)": Browser Forward
     "&kp LG(LS(Z))": Redo
     "&kp LS(LG(Z))": Redo
     "&kp LG(LS(G))": Find Prev

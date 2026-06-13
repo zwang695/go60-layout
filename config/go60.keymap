@@ -721,6 +721,16 @@
             flavor = "balanced";
             quick-tap-ms = <300>;
         };
+
+        // thumb_layer_sticky_access - TailorKey
+        thumb_sk_v1_TKZ: thumb_sk_v1_TKZ {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            tapping-term-ms = <200>;
+            bindings = <&mo>, <&sk>;
+            flavor = "balanced";
+            quick-tap-ms = <300>;
+        };
     };
 };
 
@@ -836,14 +846,14 @@
          &kp ESC  &HRM_left_pinky_v1_TKZ LCTRL A  &HRM_left_ring_v1_TKZ LALT S  &HRM_left_middy_v1_TKZ LGUI D  &HRM_left_index_v1_TKZ LSHFT F   &kp G                                                                                                                                                             &kp H  &HRM_right_index_v1_TKZ RSHFT J  &HRM_right_middy_v1_TKZ RGUI K  &HRM_right_ring_v1_TKZ LALT L  &HRM_right_pinky_v1_TKZ RCTRL SEMI           &kp SQT
    &mo LAYER_Magic                           &kp Z                         &kp X                          &kp C                           &kp V   &kp B                                                                                                                                                             &kp N                            &kp M                       &kp COMMA                        &kp DOT                            &kp FSLH     &caps_word
                                                                       &kp HOME                       &kp LEFT                       &kp RIGHT                                                                                                                                                                                                     &kp UP                        &kp DOWN                        &kp END
-                                                                                                                                                       &thumb_v2_TKZ LAYER_Cursor RET  &thumb_v2_TKZ LAYER_Symbol BSPC  &sk LSHFT  &sk LSHFT  &thumb_v2_TKZ LAYER_Num LS(MINUS)  &kp SPACE
+                                                                                                                                                            &kp RET  &thumb_v2_TKZ LAYER_Cursor BSPC  &thumb_sk_v1_TKZ LAYER_Symbol LSHFT  &thumb_sk_v1_TKZ LAYER_Symbol LSHFT  &thumb_v2_TKZ LAYER_Num LS(MINUS)  &kp SPACE
             >;
         };
 
         layer_Cursor {
             bindings = <
               &trans       &trans         &trans        &trans            &trans              &trans                                                                                                                         &trans     &trans       &trans      &trans        &trans                            &trans
-              &trans    &kp LG(R)  &kp LC(LS(TAB))  &kp LC(TAB)     &kp C_AC_BACK     &kp C_AC_FORWARD                                                                                                                 &kp PG_UP  &kp HOME     &kp UP      &kp END       &nav_SEARCH_SELECTED_macos_v1_TKZ &trans
+              &trans    &kp LG(R)  &kp LC(LS(TAB))  &kp LC(TAB)       &kp LG(LBKT)        &kp LG(RBKT)                                                                                                                 &kp PG_UP  &kp HOME     &kp UP      &kp END       &nav_SEARCH_SELECTED_macos_v1_TKZ &trans
               &trans  &kp LCTRL        &kp LALT        &kp LGUI         &kp LSHFT          &mkp LCLK                                                                                                                         &kp PG_DN  &kp LEFT     &kp DOWN    &kp RIGHT     &kp LC(LG(LS(N4)))              &trans
               &trans   &kp LG(Z)   &kp LG(LS(Z))     &kp LG(C)        &kp LG(V)      &kp LG(LS(V))                                                                                                                          &kp LG(L)  &cur_SELECT_WORD_BACK_macos_v1_TKZ  &cur_SELECT_WORD_macos_v1_TKZ  &cur_SELECT_LINE_macos_v1_TKZ  &kp LC(LG(LS(N3)))  &trans
                                                &none                         &none             &none                                                                                                                                                          &kp LG(F)     &kp LS(LG(G))        &kp LG(G)
