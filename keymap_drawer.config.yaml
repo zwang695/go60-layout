@@ -62,10 +62,6 @@ parse_config:
     "&kp LG(F3)": Cmd+F3
     "&kp LS(LG(V))": Cmd+Shift+V
     "&kp LG(LS(V))": Cmd+Shift+V
-    "&msc SCRL_LEFT": Scroll Left
-    "&msc SCRL_RIGHT": Scroll Right
-    "&msc SCRL_UP": Scroll Up
-    "&msc SCRL_DOWN": Scroll Down
     "&mmv MOVE_LEFT": Mouse Left
     "&mmv MOVE_RIGHT": Mouse Right
     "&mmv MOVE_UP": Mouse Up
