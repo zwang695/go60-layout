@@ -1,0 +1,316 @@
+diff --git a/app/dts/bindings/behaviors/zmk,behavior-momentary-layer.yaml b/app/dts/bindings/behaviors/zmk,behavior-momentary-layer.yaml
+index 5423e29..453dbcd 100644
+--- a/app/dts/bindings/behaviors/zmk,behavior-momentary-layer.yaml
++++ b/app/dts/bindings/behaviors/zmk,behavior-momentary-layer.yaml
+@@ -6,3 +6,8 @@ description: Momentary layer on press/release behavior
+ compatible: "zmk,behavior-momentary-layer"
+ 
+ include: one_param.yaml
++
++properties:
++  locking:
++    type: boolean
++    description: Whether to "lock" the layer active, preventing behaviors without the "locking" property from deactivating the layer
+diff --git a/app/dts/bindings/behaviors/zmk,behavior-to-layer.yaml b/app/dts/bindings/behaviors/zmk,behavior-to-layer.yaml
+index cbafddf..52deecd 100644
+--- a/app/dts/bindings/behaviors/zmk,behavior-to-layer.yaml
++++ b/app/dts/bindings/behaviors/zmk,behavior-to-layer.yaml
+@@ -6,3 +6,8 @@ description: To Layer
+ compatible: "zmk,behavior-to-layer"
+ 
+ include: one_param.yaml
++
++properties:
++  locking:
++    type: boolean
++    description: Whether to "lock" the layer active, preventing behaviors without the "locking" property from deactivating the layer
+diff --git a/app/dts/bindings/behaviors/zmk,behavior-toggle-layer.yaml b/app/dts/bindings/behaviors/zmk,behavior-toggle-layer.yaml
+index 1ab0179..270a606 100644
+--- a/app/dts/bindings/behaviors/zmk,behavior-toggle-layer.yaml
++++ b/app/dts/bindings/behaviors/zmk,behavior-toggle-layer.yaml
+@@ -16,3 +16,6 @@ properties:
+       - "on"
+       - "off"
+       - "flip"
++  locking:
++    type: boolean
++    description: Whether to "lock" the layer active, preventing behaviors without the "locking" property from deactivating the layer
+diff --git a/app/include/zmk/keymap.h b/app/include/zmk/keymap.h
+index 9b7a00c..679fc83 100644
+--- a/app/include/zmk/keymap.h
++++ b/app/include/zmk/keymap.h
+@@ -36,12 +36,14 @@ zmk_keymap_layer_id_t zmk_keymap_layer_index_to_id(zmk_keymap_layer_index_t laye
+ 
+ zmk_keymap_layer_id_t zmk_keymap_layer_default(void);
+ zmk_keymap_layers_state_t zmk_keymap_layer_state(void);
++zmk_keymap_layers_state_t zmk_keymap_layer_locks(void);
+ bool zmk_keymap_layer_active(zmk_keymap_layer_id_t layer);
++bool zmk_keymap_layer_locked(zmk_keymap_layer_id_t layer);
+ zmk_keymap_layer_index_t zmk_keymap_highest_layer_active(void);
+-int zmk_keymap_layer_activate(zmk_keymap_layer_id_t layer);
+-int zmk_keymap_layer_deactivate(zmk_keymap_layer_id_t layer);
+-int zmk_keymap_layer_toggle(zmk_keymap_layer_id_t layer);
+-int zmk_keymap_layer_to(zmk_keymap_layer_id_t layer);
++int zmk_keymap_layer_activate(zmk_keymap_layer_id_t layer, bool locking);
++int zmk_keymap_layer_deactivate(zmk_keymap_layer_id_t layer, bool locking);
++int zmk_keymap_layer_toggle(zmk_keymap_layer_id_t layer, bool locking);
++int zmk_keymap_layer_to(zmk_keymap_layer_id_t layer, bool locking);
+ const char *zmk_keymap_layer_name(zmk_keymap_layer_id_t layer);
+ 
+ const struct zmk_behavior_binding *zmk_keymap_get_layer_binding_at_idx(zmk_keymap_layer_id_t layer,
+diff --git a/app/src/behaviors/behavior_momentary_layer.c b/app/src/behaviors/behavior_momentary_layer.c
+index 78bf7a3..be8281d 100644
+--- a/app/src/behaviors/behavior_momentary_layer.c
++++ b/app/src/behaviors/behavior_momentary_layer.c
+@@ -36,16 +36,22 @@ static const struct behavior_parameter_metadata metadata = {
+ 
+ #endif
+ 
++struct behavior_mo_config {
++    bool locking;
++};
++
+ static int mo_keymap_binding_pressed(struct zmk_behavior_binding *binding,
+                                      struct zmk_behavior_binding_event event) {
+     LOG_DBG("position %d layer %d", event.position, binding->param1);
+-    return zmk_keymap_layer_activate(binding->param1);
++    const struct behavior_mo_config *cfg = zmk_behavior_get_binding(binding->behavior_dev)->config;
++    return zmk_keymap_layer_activate(binding->param1, cfg->locking);
+ }
+ 
+ static int mo_keymap_binding_released(struct zmk_behavior_binding *binding,
+                                       struct zmk_behavior_binding_event event) {
+     LOG_DBG("position %d layer %d", event.position, binding->param1);
+-    return zmk_keymap_layer_deactivate(binding->param1);
++    const struct behavior_mo_config *cfg = zmk_behavior_get_binding(binding->behavior_dev)->config;
++    return zmk_keymap_layer_deactivate(binding->param1, cfg->locking);
+ }
+ 
+ static const struct behavior_driver_api behavior_mo_driver_api = {
+@@ -56,5 +62,11 @@ static const struct behavior_driver_api behavior_mo_driver_api = {
+ #endif // IS_ENABLED(CONFIG_ZMK_BEHAVIOR_METADATA)
+ };
+ 
+-BEHAVIOR_DT_INST_DEFINE(0, NULL, NULL, NULL, NULL, POST_KERNEL, CONFIG_KERNEL_INIT_PRIORITY_DEFAULT,
+-                        &behavior_mo_driver_api);
++#define MO_INST(n)                                                                                 \
++    static const struct behavior_mo_config behavior_mo_config_##n = {                              \
++        .locking = DT_INST_PROP_OR(n, locking, false),                                             \
++    };                                                                                             \
++    BEHAVIOR_DT_INST_DEFINE(n, NULL, NULL, NULL, &behavior_mo_config_##n, POST_KERNEL,             \
++                            CONFIG_KERNEL_INIT_PRIORITY_DEFAULT, &behavior_mo_driver_api);
++
++DT_INST_FOREACH_STATUS_OKAY(MO_INST)
+diff --git a/app/src/behaviors/behavior_to_layer.c b/app/src/behaviors/behavior_to_layer.c
+index dae19eb..61a9696 100644
+--- a/app/src/behaviors/behavior_to_layer.c
++++ b/app/src/behaviors/behavior_to_layer.c
+@@ -17,10 +17,15 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
+ 
+ #if DT_HAS_COMPAT_STATUS_OKAY(DT_DRV_COMPAT)
+ 
++struct behavior_to_config {
++    bool locking;
++};
++
+ static int to_keymap_binding_pressed(struct zmk_behavior_binding *binding,
+                                      struct zmk_behavior_binding_event event) {
+     LOG_DBG("position %d layer %d", event.position, binding->param1);
+-    zmk_keymap_layer_to(binding->param1);
++    const struct behavior_to_config *cfg = zmk_behavior_get_binding(binding->behavior_dev)->config;
++    zmk_keymap_layer_to(binding->param1, cfg->locking);
+     return ZMK_BEHAVIOR_OPAQUE;
+ }
+ 
+@@ -59,7 +64,13 @@ static const struct behavior_driver_api behavior_to_driver_api = {
+ #endif // IS_ENABLED(CONFIG_ZMK_BEHAVIOR_METADATA)
+ };
+ 
+-BEHAVIOR_DT_INST_DEFINE(0, NULL, NULL, NULL, NULL, POST_KERNEL, CONFIG_KERNEL_INIT_PRIORITY_DEFAULT,
+-                        &behavior_to_driver_api);
++#define TO_INST(n)                                                                                 \
++    static const struct behavior_to_config behavior_to_config_##n = {                              \
++        .locking = DT_INST_PROP_OR(n, locking, false),                                             \
++    };                                                                                             \
++    BEHAVIOR_DT_INST_DEFINE(n, NULL, NULL, NULL, &behavior_to_config_##n, POST_KERNEL,             \
++                            CONFIG_KERNEL_INIT_PRIORITY_DEFAULT, &behavior_to_driver_api);
++
++DT_INST_FOREACH_STATUS_OKAY(TO_INST)
+ 
+ #endif /* DT_HAS_COMPAT_STATUS_OKAY(DT_DRV_COMPAT) */
+diff --git a/app/src/behaviors/behavior_toggle_layer.c b/app/src/behaviors/behavior_toggle_layer.c
+index 3194873..ff38f6b 100644
+--- a/app/src/behaviors/behavior_toggle_layer.c
++++ b/app/src/behaviors/behavior_toggle_layer.c
+@@ -25,6 +25,7 @@ enum toggle_mode {
+ 
+ struct behavior_tog_config {
+     enum toggle_mode toggle_mode;
++    bool locking;
+ };
+ 
+ static int tog_keymap_binding_pressed(struct zmk_behavior_binding *binding,
+@@ -34,11 +35,11 @@ static int tog_keymap_binding_pressed(struct zmk_behavior_binding *binding,
+     const struct behavior_tog_config *cfg = zmk_behavior_get_binding(binding->behavior_dev)->config;
+     switch (cfg->toggle_mode) {
+     case ON:
+-        return zmk_keymap_layer_activate(binding->param1);
++        return zmk_keymap_layer_activate(binding->param1, cfg->locking);
+     case OFF:
+-        return zmk_keymap_layer_deactivate(binding->param1);
++        return zmk_keymap_layer_deactivate(binding->param1, cfg->locking);
+     case FLIP:
+-        return zmk_keymap_layer_toggle(binding->param1);
++        return zmk_keymap_layer_toggle(binding->param1, cfg->locking);
+     default:
+         return -ENOTSUP;
+     };
+@@ -82,6 +83,7 @@ static const struct behavior_driver_api behavior_tog_driver_api = {
+ #define KT_INST(n)                                                                                 \
+     static const struct behavior_tog_config behavior_tog_config_##n = {                            \
+         .toggle_mode = DT_ENUM_IDX(DT_DRV_INST(n), toggle_mode),                                   \
++        .locking = DT_INST_PROP_OR(n, locking, false),                                             \
+     };                                                                                             \
+     BEHAVIOR_DT_INST_DEFINE(n, NULL, NULL, NULL, &behavior_tog_config_##n, POST_KERNEL,            \
+                             CONFIG_KERNEL_INIT_PRIORITY_DEFAULT, &behavior_tog_driver_api);
+diff --git a/app/src/conditional_layer.c b/app/src/conditional_layer.c
+index 9ba02a5..8d7ea02 100644
+--- a/app/src/conditional_layer.c
++++ b/app/src/conditional_layer.c
+@@ -54,7 +54,7 @@ static void conditional_layer_activate(int8_t layer) {
+     // the process will eventually terminate (at worst, when every layer is active).
+     if (!zmk_keymap_layer_active(layer)) {
+         LOG_DBG("layer %d", layer);
+-        zmk_keymap_layer_activate(layer);
++        zmk_keymap_layer_activate(layer, false);
+     }
+ }
+ 
+@@ -64,7 +64,7 @@ static void conditional_layer_deactivate(int8_t layer) {
+     // &mo binding are held and then one is released, so it's probably not an issue in practice.
+     if (zmk_keymap_layer_active(layer)) {
+         LOG_DBG("layer %d", layer);
+-        zmk_keymap_layer_deactivate(layer);
++        zmk_keymap_layer_deactivate(layer, false);
+     }
+ }
+ 
+diff --git a/app/src/keymap.c b/app/src/keymap.c
+index 762dd4f..89d97c2 100644
+--- a/app/src/keymap.c
++++ b/app/src/keymap.c
+@@ -24,6 +24,7 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
+ #include <zmk/events/sensor_event.h>
+ 
+ static zmk_keymap_layers_state_t _zmk_keymap_layer_state = 0;
++static zmk_keymap_layers_state_t _zmk_keymap_layer_locks = 0;
+ static zmk_keymap_layer_id_t _zmk_keymap_layer_default = 0;
+ 
+ #define DT_DRV_COMPAT zmk_keymap
+@@ -135,7 +136,7 @@ uint8_t map_layer_id_to_index(zmk_keymap_layer_id_t layer_id) {
+ 
+ #endif // IS_ENABLED(CONFIG_ZMK_KEYMAP_LAYER_REORDERING)
+ 
+-static inline int set_layer_state(zmk_keymap_layer_id_t layer_id, bool state) {
++static inline int set_layer_state(zmk_keymap_layer_id_t layer_id, bool state, bool locking) {
+     int ret = 0;
+     if (layer_id >= ZMK_KEYMAP_LAYERS_LEN) {
+         return -EINVAL;
+@@ -146,11 +147,19 @@ static inline int set_layer_state(zmk_keymap_layer_id_t layer_id, bool state) {
+         return 0;
+     }
+ 
++    if (!locking && !state && (_zmk_keymap_layer_locks & BIT(layer_id))) {
++        return ret;
++    }
++
+     zmk_keymap_layers_state_t old_state = _zmk_keymap_layer_state;
++    zmk_keymap_layers_state_t old_locks = _zmk_keymap_layer_locks;
+     WRITE_BIT(_zmk_keymap_layer_state, layer_id, state);
++    if (locking) {
++        WRITE_BIT(_zmk_keymap_layer_locks, layer_id, state);
++    }
+     // Don't send state changes unless there was an actual change
+-    if (old_state != _zmk_keymap_layer_state) {
+-        LOG_DBG("layer_changed: layer %d state %d", layer_id, state);
++    if (old_state != _zmk_keymap_layer_state || old_locks != _zmk_keymap_layer_locks) {
++        LOG_DBG("layer_changed: layer %d state %d locked %d", layer_id, state, locking);
+         ret = raise_layer_state_changed(layer_id, state);
+         if (ret < 0) {
+             LOG_WRN("Failed to raise layer state changed (%d)", ret);
+@@ -170,6 +179,8 @@ zmk_keymap_layer_id_t zmk_keymap_layer_default(void) { return _zmk_keymap_layer_
+ 
+ zmk_keymap_layers_state_t zmk_keymap_layer_state(void) { return _zmk_keymap_layer_state; }
+ 
++zmk_keymap_layers_state_t zmk_keymap_layer_locks(void) { return _zmk_keymap_layer_locks; }
++
+ bool zmk_keymap_layer_active_with_state(zmk_keymap_layer_id_t layer,
+                                         zmk_keymap_layers_state_t state_to_test) {
+     // The default layer is assumed to be ALWAYS ACTIVE so we include an || here to ensure nobody
+@@ -181,6 +192,10 @@ bool zmk_keymap_layer_active(zmk_keymap_layer_id_t layer) {
+     return zmk_keymap_layer_active_with_state(layer, _zmk_keymap_layer_state);
+ };
+ 
++bool zmk_keymap_layer_locked(zmk_keymap_layer_id_t layer) {
++    return zmk_keymap_layer_active_with_state(layer, _zmk_keymap_layer_locks);
++}
++
+ zmk_keymap_layer_index_t zmk_keymap_highest_layer_active(void) {
+     for (int layer_idx = ZMK_KEYMAP_LAYERS_LEN - 1;
+          layer_idx >= LAYER_ID_TO_INDEX(_zmk_keymap_layer_default); layer_idx--) {
+@@ -197,26 +212,28 @@ zmk_keymap_layer_index_t zmk_keymap_highest_layer_active(void) {
+     return LAYER_ID_TO_INDEX(zmk_keymap_layer_default());
+ }
+ 
+-int zmk_keymap_layer_activate(zmk_keymap_layer_id_t layer) { return set_layer_state(layer, true); };
++int zmk_keymap_layer_activate(zmk_keymap_layer_id_t layer, bool locking) {
++    return set_layer_state(layer, true, locking);
++};
+ 
+-int zmk_keymap_layer_deactivate(zmk_keymap_layer_id_t layer) {
+-    return set_layer_state(layer, false);
++int zmk_keymap_layer_deactivate(zmk_keymap_layer_id_t layer, bool locking) {
++    return set_layer_state(layer, false, locking);
+ };
+ 
+-int zmk_keymap_layer_toggle(zmk_keymap_layer_id_t layer) {
+-    if (zmk_keymap_layer_active(layer)) {
+-        return zmk_keymap_layer_deactivate(layer);
++int zmk_keymap_layer_toggle(zmk_keymap_layer_id_t layer, bool locking) {
++    if (zmk_keymap_layer_active(layer) && (!locking || zmk_keymap_layer_locked(layer))) {
++        return zmk_keymap_layer_deactivate(layer, locking);
+     }
+ 
+-    return zmk_keymap_layer_activate(layer);
++    return zmk_keymap_layer_activate(layer, locking);
+ };
+ 
+-int zmk_keymap_layer_to(zmk_keymap_layer_id_t layer) {
++int zmk_keymap_layer_to(zmk_keymap_layer_id_t layer, bool locking) {
+     for (int i = ZMK_KEYMAP_LAYERS_LEN - 1; i >= 0; i--) {
+-        zmk_keymap_layer_deactivate(i);
++        zmk_keymap_layer_deactivate(i, locking);
+     }
+ 
+-    zmk_keymap_layer_activate(layer);
++    zmk_keymap_layer_activate(layer, locking);
+ 
+     return 0;
+ }
+diff --git a/app/src/pointing/input_processor_temp_layer.c b/app/src/pointing/input_processor_temp_layer.c
+index 999e93a..4d18f33 100644
+--- a/app/src/pointing/input_processor_temp_layer.c
++++ b/app/src/pointing/input_processor_temp_layer.c
+@@ -72,10 +72,10 @@ static void update_layer_state(struct temp_layer_state *state, bool activate) {
+ 
+     state->is_active = activate;
+     if (activate) {
+-        zmk_keymap_layer_activate(state->toggle_layer);
++        zmk_keymap_layer_activate(state->toggle_layer, false);
+         LOG_DBG("Layer %d activated", state->toggle_layer);
+     } else {
+-        zmk_keymap_layer_deactivate(state->toggle_layer);
++        zmk_keymap_layer_deactivate(state->toggle_layer, false);
+         LOG_DBG("Layer %d deactivated", state->toggle_layer);
+     }
+ }

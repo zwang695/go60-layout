@@ -16,6 +16,8 @@ jobs:
           path: src
       - name: Apply ZMK tri-state behavior patch
         run: scripts/apply-tri-state-patch.sh src
+      - name: Apply ZMK layer locking patch
+        run: scripts/apply-layer-locking-patch.sh src
       - uses: cachix/install-nix-action@v25
         with:
           nix_path: nixpkgs=channel:nixos-22.05

@@ -33,6 +33,7 @@ COPY --chmod=755 <<EOF /bin/entrypoint.sh
     git fetch origin
     git checkout -q --detach "\$BRANCH"
     /config/scripts/apply-tri-state-patch.sh /src /config/patches/moergo-zmk-tri-state.patch
+    /config/scripts/apply-layer-locking-patch.sh /src /config/patches/moergo-zmk-layer-locking.patch
 
     echo 'Building Go60 firmware' >&2
     cd /config

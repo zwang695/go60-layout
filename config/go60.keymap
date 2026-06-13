@@ -339,6 +339,14 @@
 /* Custom Defined Behaviors */
 / {
     behaviors {
+        tog_lock_v1_TKZ: toggle_layer_lock_v1_TKZ {
+            compatible = "zmk,behavior-toggle-layer";
+            #binding-cells = <1>;
+            display-name = "Locking Toggle Layer";
+            toggle-mode = "flip";
+            locking;
+        };
+
         arrow_morph: arrow_morph {
             compatible = "zmk,behavior-mod-morph";
             #binding-cells = <0>;
@@ -839,7 +847,7 @@
               &trans  &kp LCTRL        &kp LALT        &kp LGUI         &kp LSHFT          &mkp LCLK                                                                                                                         &kp PG_DN  &kp LEFT     &kp DOWN    &kp RIGHT     &kp LC(LG(LS(N4)))              &trans
               &trans   &kp LG(Z)   &kp LG(LS(Z))     &kp LG(C)        &kp LG(V)      &kp LG(LS(V))                                                                                                                          &kp LG(L)  &cur_SELECT_WORD_BACK_macos_v1_TKZ  &cur_SELECT_WORD_macos_v1_TKZ  &cur_SELECT_LINE_macos_v1_TKZ  &kp LC(LG(LS(N3)))  &trans
                                                &none                         &none             &none                                                                                                                                                          &kp LG(F)     &kp LS(LG(G))        &kp LG(G)
-                                                                                                            &trans           &trans  &none  &none  &cyclotab_v1_TKZ  &tog LAYER_Cursor
+                                                                                                            &trans           &trans  &none  &none  &cyclotab_v1_TKZ  &tog_lock_v1_TKZ LAYER_Cursor
             >;
         };
 
