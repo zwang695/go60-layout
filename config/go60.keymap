@@ -868,7 +868,7 @@
              &trans       &kp LS(N1)     &kp LS(N8)     &kp FSLH    &kp EQUAL    &kp LS(N7)                                                                       &kp LS(N3)    &kp LS(N9)    &kp LS(N0)    &kp SEMI  &kp LS(SINGLE_QUOTE) &trans
              &trans    &kp LS(GRAVE)  &kp LS(EQUAL)     &kp LBKT     &kp RBKT    &kp LS(N5)                                                                       &kp LS(N2)  &kp LS(SEMI)    &kp COMMA      &kp DOT       &kp SQT        &trans
                                              &none          &none        &none                                                                                               &none        &none        &none
-                                                                                                         &trans       &trans        &none        &trans       &trans         &none
+                                                                                                         &trans       &trans        &trans       &trans       &trans        &trans
             >;
         };
 
@@ -879,7 +879,7 @@
      &none      &kp MINUS     &kp N3     &kp N2     &kp N1   &kp LS(EQUAL)                                                       &none  &kp RSHFT    &kp RGUI    &kp RALT  &kp RCTRL      &none
      &none          &kp X     &kp N6     &kp N5     &kp N4      &kp LS(N5)                                                         &none      &none   &kp COMMA     &kp DOT     &none      &none
                               &none      &none      &none                                                                                         &none      &none      &none
-                                                                      &tog LAYER_Num        &none     &kp N0      &none      &none      &none
+                                                                            &kp N0        &none     &tog LAYER_Num      &none      &none      &none
             >;
         };
 
@@ -887,7 +887,7 @@
             bindings = <
  &none  &none     &none                 &none                 &none                 &none       &none  &none                 &none                 &none                 &none  &none
  &none  &none     &none                 &none                 &none                 &none       &none  &none                 &none                 &none                 &none  &none
- &none  &sk LCTRL &sk LALT              &sk LGUI              &sk LSHFT             &mkp MB4    &none  &mo LAYER_MouseFast  &mo LAYER_MouseWarp  &mo LAYER_MouseSlow  &none  &none
+&kp ESC  &sk LCTRL &sk LALT              &sk LGUI              &sk LSHFT             &mkp MB4    &none  &mo LAYER_MouseFast  &mo LAYER_MouseWarp  &mo LAYER_MouseSlow  &none  &none
  &none  &none     &mo LAYER_MouseSlow  &mo LAYER_MouseWarp  &mo LAYER_MouseFast  &mkp MB5    &none  &none                 &none                 &none                 &none  &none
                  &kp LG(X)            &kp LG(C)             &kp LG(V)                                                   &none  &none  &none
                                                                                        &mkp LCLK  &mkp RCLK  &none  &none  &none  &none

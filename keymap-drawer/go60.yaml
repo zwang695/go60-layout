@@ -149,7 +149,7 @@ layers:
     - {type: held}
     - {t: ▽, type: trans}
     - {t: ▽, type: trans}
-    - ''
+    - {t: ▽, type: trans}
   Num:
   - [ESC, F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11]
   - ['', /, '9', '8', '7', '*', '', '', '[', ']', '', F12]
@@ -161,16 +161,16 @@ layers:
     - ''
     - ''
     - ''
-    - {t: Num, h: toggle}
-    - ''
     - '0'
+    - ''
+    - {t: Num, h: toggle}
     - ''
     - {type: held}
     - ''
   Mouse:
   - ['', '', '', '', '', '', '', '', '', '', '', '']
   - ['', '', '', '', '', '', '', '', '', '', '', '']
-  - - ''
+  - - ESC
     - {t: LCTRL, h: sticky}
     - {t: LALT, h: sticky}
     - {t: LGUI, h: sticky}
