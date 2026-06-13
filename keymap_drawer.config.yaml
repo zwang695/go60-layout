@@ -68,6 +68,7 @@ parse_config:
     "&mkp RCLK": Right Click
     "&mkp MB4": Back Button
     "&mkp MB5": Forward Button
+    "&mouse_gesture": Gesture
     "&mstr1_v1_TKZ": Hola Macro
     "&bootloader": Bootloader
     "&sys_reset": Reset

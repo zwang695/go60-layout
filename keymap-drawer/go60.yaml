@@ -183,7 +183,7 @@ layers:
     - ''
     - ''
   - ['', '', MouseSlow, MouseWarp, MouseFast, Forward Button, '', '', '', '', '', '']
-  - [Cut, Copy, Paste, '', '', '', Left Click, Right Click, '', '', '', '']
+  - [Cut, Copy, Gesture, '', '', '', Left Click, Right Click, '', '', '', '']
   MouseSlow:
   - - {t: ▽, type: trans}
     - {t: ▽, type: trans}
