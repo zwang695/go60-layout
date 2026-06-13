@@ -26,7 +26,16 @@ jobs:
           name: moergo-glove80-zmk-dev
           skipPush: true
       - name: Build Go60 combined firmware
-        run: nix-build config -o combined
+        run: |
+          set -o pipefail
+          if ! nix-build config -o combined --show-trace 2>&1 | tee build.log; then
+            {
+              echo 'Build failed. Last 200 log lines:'
+              tail -n 200 build.log
+            } > build-tail.log
+            python3 -c 'from pathlib import Path; message = Path("build-tail.log").read_text(errors="replace")[-6000:]; message = message.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A"); print(f"::error file=.github/workflows/build.yml,line=22,title=Nix build failed::{message}")'
+            exit 1
+          fi
       - name: Copy result out of nix store
         run: cp combined/go60.uf2 go60.uf2
       - name: Upload result
