@@ -2,8 +2,8 @@ layout: {zmk_keyboard: go60}
 layers:
   HRM_macOS:
   - [+, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-']
-  - [Caps Word, Q, W, E, R, T, Y, U, I, O, P, \]
-  - - TAB
+  - [TAB, Q, W, E, R, T, Y, U, I, O, P, \]
+  - - ESC
     - {t: A, h: LCTRL}
     - {t: S, h: LALT}
     - {t: D, h: LGUI}
@@ -15,18 +15,18 @@ layers:
     - {t: L, h: LALT}
     - {t: ;, h: RCTRL}
     - ''''
-  - [Magic, Z, X, C, V, B, N, M, ',', ., /, RET]
+  - [Magic, Z, X, C, V, B, N, M, ',', ., /, Caps Word]
   - - HOME
     - LEFT
     - RIGHT
     - UP
     - DOWN
     - END
-    - {t: _, h: Cursor}
+    - {t: RET, h: Cursor}
     - {t: BSPC, h: Symbol}
     - One Shot Shift
     - One Shot Shift
-    - {t: ESC, h: Num}
+    - {t: _, h: Num}
     - SPACE
   Cursor:
   - - {t: ▽, type: trans}
