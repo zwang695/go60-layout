@@ -813,22 +813,6 @@
             layers = <LAYER_HRM_macOS>;
         };
 
-        // sticky "hyper" modifiers (Win + Alt + Ctrl + Shift) - Use with Tab - TailorKey
-        combo_sticky_hyp_rght_v1_TKZ {
-            timeout-ms = <50>;
-            key-positions = <POS_RH_C2R5 POS_RH_C2R4>;
-            bindings = <&sk LG(LA(LC(LSHFT)))>;
-            layers = <LAYER_HRM_macOS>;
-        };
-
-        // sticky "meh" modifiers (Alt + Ctrl + Shift) - Use with Tab - TailorKey
-        combo_sticky_meh_rght_v1_TKZ {
-            timeout-ms = <50>;
-            key-positions = <POS_RH_C3R5 POS_RH_C3R4>;
-            bindings = <&sk LA(LC(LSHFT))>;
-            layers = <LAYER_HRM_macOS>;
-        };
-
         // Mouse toggle combo for Go60
         combo_mouse_toggle_fj_TKZ {
             timeout-ms = <50>;
@@ -885,7 +869,7 @@
      &none      &kp MINUS     &kp N3     &kp N2     &kp N1   &kp LS(EQUAL)                                                       &none  &kp RSHFT    &kp RGUI    &kp RALT  &kp RCTRL      &none
      &none          &kp X     &kp N6     &kp N5     &kp N4      &kp LS(N5)                                                         &none      &none   &kp COMMA     &kp DOT     &none      &none
                               &none      &none      &none                                                                                         &none      &none      &none
-                                                                      &tog LAYER_Num        &kp N0      &none      &none      &none      &none
+                                                                      &tog LAYER_Num        &none     &kp N0      &none      &none      &none
             >;
         };
 

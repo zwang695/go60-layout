@@ -162,8 +162,8 @@ layers:
     - ''
     - ''
     - {t: Num, h: toggle}
-    - '0'
     - ''
+    - '0'
     - ''
     - {type: held}
     - ''
@@ -420,12 +420,6 @@ combos:
   l: [HRM_macOS]
 - p: [9, 21]
   k: F9
-  l: [HRM_macOS]
-- p: [51, 43]
-  k: Hyper
-  l: [HRM_macOS]
-- p: [52, 44]
-  k: Meh
   l: [HRM_macOS]
 - p: [28, 31]
   k: Mouse Toggle

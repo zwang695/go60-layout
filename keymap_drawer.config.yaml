@@ -60,8 +60,6 @@ parse_config:
     "&kp LG(F3)": Cmd+F3
     "&kp LS(LG(V))": Cmd+Shift+V
     "&kp LG(LS(V))": Cmd+Shift+V
-    "&sk LG(LA(LC(LSHFT)))": Hyper
-    "&sk LA(LC(LSHFT))": Meh
     "&msc SCRL_LEFT": Scroll Left
     "&msc SCRL_RIGHT": Scroll Right
     "&msc SCRL_UP": Scroll Up
