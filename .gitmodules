@@ -1,4 +1,0 @@
-[submodule "modules/zmk-mouse-gesture"]
-	path = modules/zmk-mouse-gesture
-	url = https://github.com/kot149/zmk-mouse-gesture.git
-	branch = v1
