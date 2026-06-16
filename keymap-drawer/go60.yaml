@@ -24,8 +24,8 @@ layers:
     - END
     - RET
     - {t: BSPC, h: Cursor}
-    - {t: One Shot Shift, h: Symbol}
-    - {t: One Shot Shift, h: Symbol}
+    - {t: LSHFT, h: Symbol}
+    - {t: LSHFT, h: Symbol}
     - {t: _, h: Num}
     - SPACE
   Cursor:
