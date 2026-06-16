@@ -169,7 +169,7 @@ layers:
     - ''
   Mouse:
   - ['', '', '', '', '', '', '', '', '', '', '', '']
-  - ['', '', '', '', Gesture, '', '', '', '', '', '', '']
+  - ['', '', MouseSlow, MouseWarp, MouseFast, Gesture, '', '', '', '', '', '']
   - - ESC
     - {t: LCTRL, h: sticky}
     - {t: LALT, h: sticky}
@@ -182,8 +182,8 @@ layers:
     - MouseSlow
     - ''
     - ''
-  - ['', '', MouseSlow, MouseWarp, MouseFast, Forward Button, '', '', '', '', '', '']
-  - [Cut, Copy, Paste, '', '', '', Left Click, Right Click, '', '', '', '']
+  - ['', '', Cut, Copy, Paste, Forward Button, '', '', '', '', '', '']
+  - ['', '', '', '', '', '', Left Click, Right Click, Mouse Toggle, '', '', '']
   MouseSlow:
   - - {t: ▽, type: trans}
     - {t: ▽, type: trans}
@@ -199,7 +199,7 @@ layers:
     - {t: ▽, type: trans}
   - - {t: ▽, type: trans}
     - {t: ▽, type: trans}
-    - {t: ▽, type: trans}
+    - {type: held}
     - {t: ▽, type: trans}
     - {t: ▽, type: trans}
     - {t: ▽, type: trans}
@@ -218,7 +218,7 @@ layers:
     - {t: ▽, type: trans}
     - {t: ▽, type: trans}
     - {t: ▽, type: trans}
-    - {type: held}
+    - {t: ▽, type: trans}
     - {t: ▽, type: trans}
     - {t: ▽, type: trans}
   - - {t: ▽, type: trans}
@@ -262,7 +262,7 @@ layers:
     - {t: ▽, type: trans}
     - {t: ▽, type: trans}
     - {t: ▽, type: trans}
-    - {t: ▽, type: trans}
+    - {type: held}
     - {t: ▽, type: trans}
     - {t: ▽, type: trans}
     - {t: ▽, type: trans}
@@ -277,7 +277,7 @@ layers:
     - {t: ▽, type: trans}
     - {t: ▽, type: trans}
     - {t: ▽, type: trans}
-    - {type: held}
+    - {t: ▽, type: trans}
     - {t: ▽, type: trans}
     - {t: ▽, type: trans}
     - {t: ▽, type: trans}
@@ -322,7 +322,7 @@ layers:
   - - {t: ▽, type: trans}
     - {t: ▽, type: trans}
     - {t: ▽, type: trans}
-    - {t: ▽, type: trans}
+    - {type: held}
     - {t: ▽, type: trans}
     - {t: ▽, type: trans}
     - {t: ▽, type: trans}
@@ -339,7 +339,7 @@ layers:
     - {t: ▽, type: trans}
     - {t: ▽, type: trans}
     - {t: ▽, type: trans}
-    - {type: held}
+    - {t: ▽, type: trans}
     - {t: ▽, type: trans}
     - {t: ▽, type: trans}
     - {t: ▽, type: trans}
@@ -421,6 +421,3 @@ combos:
 - p: [9, 21]
   k: F9
   l: [HRM_macOS]
-- p: [28, 31]
-  k: Mouse Toggle
-  l: [Mouse]
