@@ -182,7 +182,7 @@ layers:
     - MouseSlow
     - ''
     - ''
-  - ['', '', Cut, Copy, Paste, Forward Button, '', '', '', '', '', '']
+  - ['', Undo, Cut, Copy, Paste, Forward Button, '', '', '', '', '', '']
   - ['', '', '', '', '', '', Left Click, Right Click, Mouse Toggle, '', '', '']
   MouseSlow:
   - - {t: ▽, type: trans}
