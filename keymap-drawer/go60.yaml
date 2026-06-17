@@ -83,8 +83,8 @@ layers:
     - Find
     - Find Prev
     - Find Next
-    - {t: ▽, type: trans}
     - {type: held}
+    - {t: ▽, type: trans}
     - ''
     - ''
     - Cyclotab
@@ -145,8 +145,8 @@ layers:
     - ''
     - ''
     - {t: ▽, type: trans}
-    - {t: ▽, type: trans}
     - {type: held}
+    - {t: ▽, type: trans}
     - {t: ▽, type: trans}
     - {t: ▽, type: trans}
     - {t: ▽, type: trans}
@@ -165,8 +165,8 @@ layers:
     - ''
     - {t: Num, h: toggle}
     - ''
-    - {type: held}
     - ''
+    - {type: held}
   Mouse:
   - ['', '', '', '', '', '', '', '', '', '', '', '']
   - [Mouse Toggle, '', '', MouseSlow, MouseFast, Gesture, '', '', '', '', '', '']
