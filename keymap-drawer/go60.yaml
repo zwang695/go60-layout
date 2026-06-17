@@ -22,12 +22,12 @@ layers:
     - UP
     - DOWN
     - END
-    - RET
-    - {t: BSPC, h: Cursor}
-    - Symbol
-    - Symbol
-    - {t: _, h: Num}
-    - SPACE
+    - {t: RET, h: Cursor}
+    - {t: BSPC, h: Symbol}
+    - CAG
+    - CAG
+    - {t: _, h: Symbol}
+    - {t: SPACE, h: Num}
   Cursor:
   - - {t: ▽, type: trans}
     - {t: ▽, type: trans}
