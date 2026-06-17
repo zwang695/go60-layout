@@ -169,7 +169,7 @@ layers:
     - ''
   Mouse:
   - ['', '', '', '', '', '', '', '', '', '', '', '']
-  - ['', '', '', MouseSlow, MouseFast, Gesture, '', '', '', '', '', '']
+  - [Mouse Toggle, '', '', MouseSlow, MouseFast, Gesture, '', '', '', '', '', '']
   - - ESC
     - {t: LCTRL, h: sticky}
     - {t: LALT, h: sticky}
@@ -183,7 +183,7 @@ layers:
     - ''
     - ''
   - ['', Undo, Cut, Copy, Paste, Forward Button, '', '', '', '', '', '']
-  - ['', '', '', '', '', '', Left Click, Right Click, Mouse Toggle, '', '', '']
+  - ['', '', '', '', '', '', Left Click, Right Click, '', '', '', '']
   MouseSlow:
   - - {t: ▽, type: trans}
     - {t: ▽, type: trans}

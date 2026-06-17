@@ -904,11 +904,11 @@
         layer_Mouse {
             bindings = <
  &none  &none     &none                 &none                 &none                 &none       &none  &none                 &none                 &none                 &none  &none
- &none  &none     &none                 &mo LAYER_MouseSlow  &mo LAYER_MouseFast  &mouse_gesture  &none  &none                 &none                 &none                 &none  &none
+ &tog LAYER_Mouse  &none     &none                 &mo LAYER_MouseSlow  &mo LAYER_MouseFast  &mouse_gesture  &none  &none                 &none                 &none                 &none  &none
 &kp ESC  &sk LCTRL &sk LALT              &sk LGUI              &sk LSHFT             &mkp MB4    &none  &mo LAYER_MouseFast  &mo LAYER_MouseSlow  &none                 &none  &none
  &none  &kp LG(Z) &kp LG(X)            &kp LG(C)             &kp LG(V)             &mkp MB5    &none  &none                 &none                 &none                 &none  &none
                  &none                &none                 &none                                                       &none  &none  &none
-                                                                                       &mkp LCLK  &mkp RCLK  &tog LAYER_Mouse  &none  &none  &none
+                                                                                       &mkp LCLK  &mkp RCLK  &none  &none  &none  &none
             >;
         };
 
