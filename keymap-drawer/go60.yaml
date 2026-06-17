@@ -24,8 +24,8 @@ layers:
     - END
     - RET
     - {t: BSPC, h: Cursor}
-    - {t: LSHFT, h: Symbol}
-    - {t: LSHFT, h: Symbol}
+    - Symbol
+    - Symbol
     - {t: _, h: Num}
     - SPACE
   Cursor:
@@ -169,7 +169,7 @@ layers:
     - ''
   Mouse:
   - ['', '', '', '', '', '', '', '', '', '', '', '']
-  - ['', '', MouseSlow, MouseWarp, MouseFast, Gesture, '', '', '', '', '', '']
+  - ['', '', '', MouseSlow, MouseFast, Gesture, '', '', '', '', '', '']
   - - ESC
     - {t: LCTRL, h: sticky}
     - {t: LALT, h: sticky}
@@ -178,8 +178,8 @@ layers:
     - Back Button
     - ''
     - MouseFast
-    - MouseWarp
     - MouseSlow
+    - ''
     - ''
     - ''
   - ['', Undo, Cut, Copy, Paste, Forward Button, '', '', '', '', '', '']
@@ -199,8 +199,8 @@ layers:
     - {t: ▽, type: trans}
   - - {t: ▽, type: trans}
     - {t: ▽, type: trans}
-    - {type: held}
     - {t: ▽, type: trans}
+    - {type: held}
     - {t: ▽, type: trans}
     - {t: ▽, type: trans}
     - {t: ▽, type: trans}
@@ -322,7 +322,7 @@ layers:
   - - {t: ▽, type: trans}
     - {t: ▽, type: trans}
     - {t: ▽, type: trans}
-    - {type: held}
+    - {t: ▽, type: trans}
     - {t: ▽, type: trans}
     - {t: ▽, type: trans}
     - {t: ▽, type: trans}
