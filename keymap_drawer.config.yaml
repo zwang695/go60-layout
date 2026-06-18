@@ -2,9 +2,8 @@ parse_config:
   raw_binding_map:
     "&caps_word": Caps Word
     "&sk LSHFT": One Shot Shift
-    "&kp CAG": CAG
-    "&HRM_left_index_v1_TKZ CAG G": {t: G, h: CAG}
-    "&HRM_right_index_v1_TKZ CAG H": {t: H, h: CAG}
+    "&kp MIC_ON": Mic On
+    "&sentence_end_v1_TKZ": Sentence End
     "&kp LG(LS(N3))": Screenshot
     "&kp LG(LS(N4))": Area Screenshot
     "&kp LC(LG(LS(N4)))": Copy Area Screenshot

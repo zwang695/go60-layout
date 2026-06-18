@@ -8,8 +8,8 @@ layers:
     - {t: S, h: LALT}
     - {t: D, h: LGUI}
     - {t: F, h: LSHFT}
-    - {t: G, h: CAG}
-    - {t: H, h: CAG}
+    - G
+    - H
     - {t: J, h: RSHFT}
     - {t: K, h: RGUI}
     - {t: L, h: LALT}
@@ -24,8 +24,8 @@ layers:
     - END
     - {t: RET, h: Cursor}
     - {t: BSPC, h: Symbol}
-    - CAG
-    - CAG
+    - Mic On
+    - Sentence End
     - {t: _, h: Symbol}
     - {t: SPACE, h: Num}
   Cursor:
@@ -153,7 +153,7 @@ layers:
   Num:
   - [ESC, F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11]
   - ['', /, '9', '8', '7', '*', '', '', '[', ']', '', F12]
-  - ['', '-', '3', '2', '1', +, CAG, RSHFT, RGUI, RALT, RCTRL, '']
+  - ['', '-', '3', '2', '1', +, '', RSHFT, RGUI, RALT, RCTRL, '']
   - ['', X, '6', '5', '4', '%', '', '', ',', ., '', '']
   - - ''
     - ''

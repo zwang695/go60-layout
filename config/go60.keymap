@@ -129,7 +129,7 @@
 #define KEYS_L LEFT_HAND_KEYS
 #define KEYS_R RIGHT_HAND_KEYS
 #define THUMBS THUMB_KEYS
-#define CAG LC(LA(LGUI))
+#define MIC_ON ZMK_HID_USAGE(HID_USAGE_CONSUMER, HID_USAGE_CONSUMER_START_OR_STOP_MICROPHONE_CAPTURE)
 
 /* Environment and metadata defines */
 #define KB_TYPE_GLOVE_80 1
@@ -443,6 +443,18 @@
                 , <&kp LS(COMMA)>
                 , <&kp EQUAL>
                 , <&kp LS(DOT)>;
+        };
+
+        sentence_end_v1_TKZ: sentence_end_v1_TKZ {
+            label = "&SENTENCE_END_V1_TKZ";
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            tap-ms = <1>;
+            wait-ms = <1>;
+            bindings = <&macro_tap>
+                , <&kp DOT>
+                , <&kp SPACE>
+                , <&skq LSHFT>;
         };
 
         // AutoShift Helper- &AS main macro is chained to &AS_HT hold tap and &AS_Shifted macro - TailorKey
@@ -861,10 +873,10 @@
             bindings = <
        &kp LS(EQUAL)                      &kp N1                        &kp N2                         &kp N3                          &kp N4  &kp N5                                                                                                                                                            &kp N6                           &kp N7                          &kp N8                         &kp N9                              &kp N0         &kp MINUS
            &kp TAB                           &kp Q                         &kp W                          &kp E                           &kp R   &kp T                                                                                                                                                             &kp Y                            &kp U                           &kp I                          &kp O                               &kp P          &kp BSLH
-         &kp ESC  &HRM_left_pinky_v1_TKZ LCTRL A  &HRM_left_ring_v1_TKZ LALT S  &HRM_left_middy_v1_TKZ LGUI D  &HRM_left_index_v1_TKZ LSHFT F  &HRM_left_index_v1_TKZ CAG G                                                                                                                                      &HRM_right_index_v1_TKZ CAG H  &HRM_right_index_v1_TKZ RSHFT J  &HRM_right_middy_v1_TKZ RGUI K  &HRM_right_ring_v1_TKZ LALT L  &HRM_right_pinky_v1_TKZ RCTRL SEMI           &kp SQT
+         &kp ESC  &HRM_left_pinky_v1_TKZ LCTRL A  &HRM_left_ring_v1_TKZ LALT S  &HRM_left_middy_v1_TKZ LGUI D  &HRM_left_index_v1_TKZ LSHFT F   &kp G                                                                                                                                                             &kp H  &HRM_right_index_v1_TKZ RSHFT J  &HRM_right_middy_v1_TKZ RGUI K  &HRM_right_ring_v1_TKZ LALT L  &HRM_right_pinky_v1_TKZ RCTRL SEMI           &kp SQT
    &mo LAYER_Magic                           &kp Z                         &kp X                          &kp C                           &kp V   &kp B                                                                                                                                                             &kp N                            &kp M                       &kp COMMA                        &kp DOT                            &kp FSLH     &caps_word
                                                                       &kp HOME                       &kp LEFT                       &kp RIGHT                                                                                                                                                                                                     &kp UP                        &kp DOWN                        &kp END
-                                                                                                                                                            &thumb_v2_TKZ LAYER_Cursor RET  &thumb_v2_TKZ LAYER_Symbol BSPC  &kp CAG  &kp CAG  &thumb_v2_TKZ LAYER_Symbol LS(MINUS)  &thumb_v2_TKZ LAYER_Num SPACE
+                                                                                                                                                            &thumb_v2_TKZ LAYER_Cursor RET  &thumb_v2_TKZ LAYER_Symbol BSPC  &kp MIC_ON  &sentence_end_v1_TKZ  &thumb_v2_TKZ LAYER_Symbol LS(MINUS)  &thumb_v2_TKZ LAYER_Num SPACE
             >;
         };
 
@@ -894,7 +906,7 @@
             bindings = <
    &kp ESC         &kp F1     &kp F2     &kp F3     &kp F4          &kp F5                                                           &kp F6     &kp F7      &kp F8      &kp F9     &kp F10     &kp F11
      &none       &kp FSLH     &kp N9     &kp N8     &kp N7      &kp LS(N8)                                                         &none      &none    &kp LBKT    &kp RBKT     &none     &kp F12
-     &none      &kp MINUS     &kp N3     &kp N2     &kp N1   &kp LS(EQUAL)                                                    &kp CAG  &kp RSHFT    &kp RGUI    &kp RALT  &kp RCTRL      &none
+     &none      &kp MINUS     &kp N3     &kp N2     &kp N1   &kp LS(EQUAL)                                                       &none  &kp RSHFT    &kp RGUI    &kp RALT  &kp RCTRL      &none
      &none          &kp X     &kp N6     &kp N5     &kp N4      &kp LS(N5)                                                         &none      &none   &kp COMMA     &kp DOT     &none      &none
                               &none      &none      &none                                                                                         &none      &none      &none
                                                                             &kp N0        &none     &tog LAYER_Num      &none      &none      &none
