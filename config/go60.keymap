@@ -129,7 +129,6 @@
 #define KEYS_L LEFT_HAND_KEYS
 #define KEYS_R RIGHT_HAND_KEYS
 #define THUMBS THUMB_KEYS
-#define MIC_ON ZMK_HID_USAGE(HID_USAGE_CONSUMER, HID_USAGE_CONSUMER_START_OR_STOP_MICROPHONE_CAPTURE)
 
 /* Environment and metadata defines */
 #define KB_TYPE_GLOVE_80 1
@@ -876,7 +875,7 @@
          &kp ESC  &HRM_left_pinky_v1_TKZ LCTRL A  &HRM_left_ring_v1_TKZ LALT S  &HRM_left_middy_v1_TKZ LGUI D  &HRM_left_index_v1_TKZ LSHFT F   &kp G                                                                                                                                                             &kp H  &HRM_right_index_v1_TKZ RSHFT J  &HRM_right_middy_v1_TKZ RGUI K  &HRM_right_ring_v1_TKZ LALT L  &HRM_right_pinky_v1_TKZ RCTRL SEMI           &kp SQT
    &mo LAYER_Magic                           &kp Z                         &kp X                          &kp C                           &kp V   &kp B                                                                                                                                                             &kp N                            &kp M                       &kp COMMA                        &kp DOT                            &kp FSLH     &caps_word
                                                                       &kp HOME                       &kp LEFT                       &kp RIGHT                                                                                                                                                                                                     &kp UP                        &kp DOWN                        &kp END
-                                                                                                                                                            &thumb_v2_TKZ LAYER_Cursor RET  &thumb_v2_TKZ LAYER_Symbol BSPC  &kp MIC_ON  &sentence_end_v1_TKZ  &thumb_v2_TKZ LAYER_Symbol LS(MINUS)  &thumb_v2_TKZ LAYER_Num SPACE
+                                                                                                                                                            &thumb_v2_TKZ LAYER_Cursor RET  &thumb_v2_TKZ LAYER_Symbol BSPC  &kp LC(LS(LALT))  &sentence_end_v1_TKZ  &thumb_v2_TKZ LAYER_Symbol LS(MINUS)  &thumb_v2_TKZ LAYER_Num SPACE
             >;
         };
 
@@ -896,7 +895,7 @@
              &trans           &trans         &trans       &trans       &trans        &trans                                                                           &trans       &trans        &trans        &trans       &trans        &trans
              &trans        &kp GRAVE  &kp LS(COMMA)  &kp LS(DOT)    &kp MINUS  &kp LS(BSLH)                                                                       &kp LS(N6)  &kp LS(LBKT)  &kp LS(RBKT)  &kp LS(N4)  &arrow_morph        &trans
              &trans       &kp LS(N1)     &kp LS(N8)     &kp FSLH    &kp EQUAL    &kp LS(N7)                                                                       &kp LS(N3)    &kp LS(N9)    &kp LS(N0)    &kp SEMI  &kp LS(SINGLE_QUOTE) &trans
-             &trans    &kp LS(GRAVE)  &kp LS(EQUAL)     &kp LBKT     &kp RBKT    &kp LS(N5)                                                                       &kp LS(N2)  &kp LS(SEMI)    &kp COMMA      &kp DOT       &kp SQT        &trans
+             &trans    &kp LS(GRAVE)  &kp LS(EQUAL)     &kp LBKT     &kp RBKT    &kp LS(N5)                                                                       &kp LS(N2)  &kp LS(SEMI)      &kp SQT      &kp DOT  &kp LS(FSLH)        &trans
                                              &none          &none        &none                                                                                               &none        &none        &none
                                                                                                          &trans       &trans        &trans       &trans       &trans        &trans
             >;

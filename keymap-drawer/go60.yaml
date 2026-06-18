@@ -24,7 +24,7 @@ layers:
     - END
     - {t: RET, h: Cursor}
     - {t: BSPC, h: Symbol}
-    - Mic On
+    - Meh
     - Sentence End
     - {t: _, h: Symbol}
     - {t: SPACE, h: Num}
@@ -134,9 +134,9 @@ layers:
     - '%'
     - '@'
     - ':'
-    - ','
-    - .
     - ''''
+    - .
+    - '?'
     - {t: ▽, type: trans}
   - - ''
     - ''
