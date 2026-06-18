@@ -2,7 +2,7 @@ parse_config:
   raw_binding_map:
     "&caps_word": Caps Word
     "&sk LSHFT": One Shot Shift
-    "&kp LC(LS(LALT))": Meh
+    "&kp GLOBE": Globe
     "&sentence_end_v1_TKZ": Sentence End
     "&kp LG(LS(N3))": Screenshot
     "&kp LG(LS(N4))": Area Screenshot

@@ -24,7 +24,7 @@ layers:
     - END
     - {t: RET, h: Cursor}
     - {t: BSPC, h: Symbol}
-    - Meh
+    - Globe
     - Sentence End
     - {t: _, h: Symbol}
     - {t: SPACE, h: Num}
