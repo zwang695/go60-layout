@@ -7,10 +7,10 @@ layers:
     - {t: A, h: LCTRL}
     - {t: S, h: LALT}
     - {t: D, h: LGUI}
-    - {t: F, h: LSHFT}
+    - {t: F, h: Symbol}
     - G
     - H
-    - {t: J, h: RSHFT}
+    - {t: J, h: Symbol}
     - {t: K, h: RGUI}
     - {t: L, h: LALT}
     - {t: ;, h: RCTRL}
@@ -22,11 +22,11 @@ layers:
     - UP
     - DOWN
     - END
-    - {t: RET, h: Cursor}
-    - {t: BSPC, h: Symbol}
+    - {t: BSPC, h: Cursor}
+    - Shift
     - Globe
     - Sentence End
-    - {t: _, h: Symbol}
+    - RET
     - {t: SPACE, h: Num}
   Cursor:
   - - {t: ▽, type: trans}
@@ -57,7 +57,7 @@ layers:
     - LCTRL
     - LALT
     - LGUI
-    - LSHFT
+    - Shift
     - Left Click
     - PG DN
     - LEFT
@@ -118,7 +118,7 @@ layers:
     - '!'
     - '*'
     - /
-    - '='
+    - {t: '=', type: held}
     - '&'
     - '#'
     - (
@@ -135,7 +135,7 @@ layers:
     - '@'
     - ':'
     - ''''
-    - .
+    - _
     - '?'
     - {t: ▽, type: trans}
   - - ''
@@ -145,7 +145,7 @@ layers:
     - ''
     - ''
     - {t: ▽, type: trans}
-    - {type: held}
+    - {t: ▽, type: trans}
     - {t: ▽, type: trans}
     - {t: ▽, type: trans}
     - {t: ▽, type: trans}

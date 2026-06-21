@@ -639,6 +639,20 @@
             hold-while-undecided;
         };
 
+        // Symbol layer access for the left index finger.
+        sym_left_index_v1_TKZ: sym_left_index_v1_TKZ {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            tapping-term-ms = <280>;
+            bindings = <&mo>, <&kp>;
+            flavor = "balanced";
+            quick-tap-ms = <125>;
+            require-prior-idle-ms = <100>;
+            hold-trigger-key-positions = <KEYS_R THUMBS>;
+            hold-trigger-on-release;
+            hold-while-undecided;
+        };
+
         // Homerow Mod for the left middle finger - TailorKey
         HRM_left_middy_v1_TKZ: HRM_left_middy_v1_TKZ {
             compatible = "zmk,behavior-hold-tap";
@@ -687,6 +701,20 @@
             #binding-cells = <2>;
             tapping-term-ms = <280>;
             bindings = <&kp>, <&kp>;
+            flavor = "balanced";
+            quick-tap-ms = <125>;
+            require-prior-idle-ms = <100>;
+            hold-trigger-key-positions = <KEYS_L THUMBS>;
+            hold-trigger-on-release;
+            hold-while-undecided;
+        };
+
+        // Symbol layer access for the right index finger.
+        sym_right_index_v1_TKZ: sym_right_index_v1_TKZ {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            tapping-term-ms = <280>;
+            bindings = <&mo>, <&kp>;
             flavor = "balanced";
             quick-tap-ms = <125>;
             require-prior-idle-ms = <100>;
@@ -872,10 +900,10 @@
             bindings = <
        &kp LS(EQUAL)                      &kp N1                        &kp N2                         &kp N3                          &kp N4  &kp N5                                                                                                                                                            &kp N6                           &kp N7                          &kp N8                         &kp N9                              &kp N0         &kp MINUS
            &kp TAB                           &kp Q                         &kp W                          &kp E                           &kp R   &kp T                                                                                                                                                             &kp Y                            &kp U                           &kp I                          &kp O                               &kp P          &kp BSLH
-         &kp ESC  &HRM_left_pinky_v1_TKZ LCTRL A  &HRM_left_ring_v1_TKZ LALT S  &HRM_left_middy_v1_TKZ LGUI D  &HRM_left_index_v1_TKZ LSHFT F   &kp G                                                                                                                                                             &kp H  &HRM_right_index_v1_TKZ RSHFT J  &HRM_right_middy_v1_TKZ RGUI K  &HRM_right_ring_v1_TKZ LALT L  &HRM_right_pinky_v1_TKZ RCTRL SEMI           &kp SQT
+         &kp ESC  &HRM_left_pinky_v1_TKZ LCTRL A  &HRM_left_ring_v1_TKZ LALT S  &HRM_left_middy_v1_TKZ LGUI D  &sym_left_index_v1_TKZ LAYER_Symbol F   &kp G                                                                                                                                                             &kp H  &sym_right_index_v1_TKZ LAYER_Symbol J  &HRM_right_middy_v1_TKZ RGUI K  &HRM_right_ring_v1_TKZ LALT L  &HRM_right_pinky_v1_TKZ RCTRL SEMI           &kp SQT
    &mo LAYER_Magic                           &kp Z                         &kp X                          &kp C                           &kp V   &kp B                                                                                                                                                             &kp N                            &kp M                       &kp COMMA                        &kp DOT                            &kp FSLH     &caps_word
                                                                       &kp HOME                       &kp LEFT                       &kp RIGHT                                                                                                                                                                                                     &kp UP                        &kp DOWN                        &kp END
-                                                                                                                                                            &thumb_v2_TKZ LAYER_Cursor RET  &thumb_v2_TKZ LAYER_Symbol BSPC  &kp GLOBE  &sentence_end_v1_TKZ  &thumb_v2_TKZ LAYER_Symbol LS(MINUS)  &thumb_v2_TKZ LAYER_Num SPACE
+                                                                                                                                                            &thumb_v2_TKZ LAYER_Cursor BSPC  &kp LSHFT  &kp GLOBE  &sentence_end_v1_TKZ  &kp RET  &thumb_v2_TKZ LAYER_Num SPACE
             >;
         };
 
@@ -895,7 +923,7 @@
              &trans           &trans         &trans       &trans       &trans        &trans                                                                           &trans       &trans        &trans        &trans       &trans        &trans
              &trans        &kp GRAVE  &kp LS(COMMA)  &kp LS(DOT)    &kp MINUS  &kp LS(BSLH)                                                                       &kp LS(N6)  &kp LS(LBKT)  &kp LS(RBKT)  &kp LS(N4)  &arrow_morph        &trans
              &trans       &kp LS(N1)     &kp LS(N8)     &kp FSLH    &kp EQUAL    &kp LS(N7)                                                                       &kp LS(N3)    &kp LS(N9)    &kp LS(N0)    &kp SEMI  &kp LS(SINGLE_QUOTE) &trans
-             &trans    &kp LS(GRAVE)  &kp LS(EQUAL)     &kp LBKT     &kp RBKT    &kp LS(N5)                                                                       &kp LS(N2)  &kp LS(SEMI)      &kp SQT      &kp DOT  &kp LS(FSLH)        &trans
+             &trans    &kp LS(GRAVE)  &kp LS(EQUAL)     &kp LBKT     &kp RBKT    &kp LS(N5)                                                                       &kp LS(N2)  &kp LS(SEMI)      &kp SQT      &kp LS(MINUS)  &kp LS(FSLH)        &trans
                                              &none          &none        &none                                                                                               &none        &none        &none
                                                                                                          &trans       &trans        &trans       &trans       &trans        &trans
             >;
