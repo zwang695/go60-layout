@@ -34,6 +34,7 @@ COPY --chmod=755 <<EOF /bin/entrypoint.sh
     git checkout -q --detach "\$BRANCH"
     /config/scripts/apply-tri-state-patch.sh /src /config/patches/moergo-zmk-tri-state.patch
     /config/scripts/apply-layer-locking-patch.sh /src /config/patches/moergo-zmk-layer-locking.patch
+    /config/scripts/apply-mouse-mode-indicator-patch.sh /src /config/patches/moergo-zmk-mouse-mode-indicator.patch
 
     echo 'Building Go60 firmware' >&2
     cd /config

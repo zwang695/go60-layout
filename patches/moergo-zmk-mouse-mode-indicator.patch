@@ -1,0 +1,191 @@
+diff --git a/app/dts/bindings/zmk,mouse-mode-indicator.yaml b/app/dts/bindings/zmk,mouse-mode-indicator.yaml
+new file mode 100644
+index 0000000..82647ac
+--- /dev/null
++++ b/app/dts/bindings/zmk,mouse-mode-indicator.yaml
+@@ -0,0 +1,18 @@
++# Copyright (c) 2026
++# SPDX-License-Identifier: MIT
++
++description: Mouse mode RGB indicator
++
++compatible: "zmk,mouse-mode-indicator"
++
++properties:
++  layers:
++    type: array
++    required: true
++  pixels:
++    type: array
++    required: true
++  color:
++    type: array
++    required: true
++    description: Raw RGB byte values, ordered as red green blue.
+diff --git a/app/src/rgb_underglow.c b/app/src/rgb_underglow.c
+index c4834ca..59d920c 100644
+--- a/app/src/rgb_underglow.c
++++ b/app/src/rgb_underglow.c
+@@ -31,6 +31,7 @@
+ #include <zmk/events/activity_state_changed.h>
+ #include <zmk/events/usb_conn_state_changed.h>
+ #include <zmk/workqueue.h>
++#include <zmk/events/layer_state_changed.h>
+ 
+ #if IS_ENABLED(CONFIG_ZMK_SPLIT_BLE_CENTRAL_BATTERY_LEVEL_FETCHING)
+ #include <zmk/split/central.h>
+@@ -192,6 +193,60 @@ static void zmk_rgb_underglow_effect_swirl(void) {
+ 
+ static int zmk_led_generate_status(void);
+ 
++
++#define MOUSE_MODE_INDICATOR DT_PATH(mouse_mode_indicator)
++
++#if defined(DT_N_S_mouse_mode_indicator_EXISTS)
++#define MOUSE_MODE_INDICATOR_ENABLED 1
++#else
++#define MOUSE_MODE_INDICATOR_ENABLED 0
++#endif
++
++#if MOUSE_MODE_INDICATOR_ENABLED
++static const uint8_t mouse_mode_indicator_layers[] = DT_PROP(MOUSE_MODE_INDICATOR, layers);
++static const uint8_t mouse_mode_indicator_pixels[] = DT_PROP(MOUSE_MODE_INDICATOR, pixels);
++static const struct led_rgb mouse_mode_indicator_color = {
++    .r = DT_PROP_BY_IDX(MOUSE_MODE_INDICATOR, color, 0),
++    .g = DT_PROP_BY_IDX(MOUSE_MODE_INDICATOR, color, 1),
++    .b = DT_PROP_BY_IDX(MOUSE_MODE_INDICATOR, color, 2),
++};
++
++BUILD_ASSERT(DT_PROP_LEN(MOUSE_MODE_INDICATOR, color) == 3,
++             "mouse_mode_indicator color must be three RGB values");
++
++static bool zmk_mouse_mode_indicator_active(void) {
++    for (int i = 0; i < ARRAY_SIZE(mouse_mode_indicator_layers); i++) {
++        if (zmk_keymap_layer_active(mouse_mode_indicator_layers[i])) {
++            return true;
++        }
++    }
++
++    return false;
++}
++
++static void zmk_led_apply_mouse_mode_indicator(struct led_rgb *led_buffer,
++                                               bool mouse_mode_active) {
++    if (!mouse_mode_active) {
++        return;
++    }
++
++    for (int i = 0; i < ARRAY_SIZE(mouse_mode_indicator_pixels); i++) {
++        uint8_t pixel = mouse_mode_indicator_pixels[i];
++        if (pixel >= STRIP_NUM_PIXELS) {
++            LOG_WRN("Mouse mode indicator pixel %d outside strip length %d", pixel,
++                    STRIP_NUM_PIXELS);
++            continue;
++        }
++
++        led_buffer[pixel] = mouse_mode_indicator_color;
++    }
++}
++#else
++static bool zmk_mouse_mode_indicator_active(void) { return false; }
++static void zmk_led_apply_mouse_mode_indicator(struct led_rgb *led_buffer,
++                                               bool mouse_mode_active) {}
++#endif
++
+ static void zmk_led_write_pixels(void) {
+     static struct led_rgb led_buffer[STRIP_NUM_PIXELS];
+     int bat0;
+@@ -203,13 +258,17 @@ static void zmk_led_write_pixels(void) {
+ #else
+     bat0 = 100;
+ #endif
++    bool mouse_mode_active = zmk_mouse_mode_indicator_active();
++    if (bat0 < 10) {
++        mouse_mode_active = false;
++    }
+ 
+     if (state.status_active) {
+         blend = zmk_led_generate_status();
+     }
+ 
+     // fast path: no status indicators, battery level OK
+-    if (blend == 0 && bat0 >= 20) {
++    if (blend == 0 && bat0 >= 20 && !mouse_mode_active) {
+         led_strip_update_rgb(led_strip, pixels, STRIP_NUM_PIXELS);
+         return;
+     }
+@@ -256,6 +315,8 @@ static void zmk_led_write_pixels(void) {
+         }
+     }
+ 
++    zmk_led_apply_mouse_mode_indicator(led_buffer, mouse_mode_active);
++
+     int err = led_strip_update_rgb(led_strip, led_buffer, STRIP_NUM_PIXELS);
+     if (err < 0) {
+         LOG_ERR("Failed to update the RGB strip (%d)", err);
+@@ -547,11 +608,12 @@ void zmk_rgb_set_ext_power(void) {
+         LOG_ERR("Unable to examine EXT_POWER: %d", c_power);
+         c_power = 0;
+     }
+-    int desired_state = state.on || state.status_active;
++    bool mouse_mode_active = zmk_mouse_mode_indicator_active();
++    int desired_state = state.on || state.status_active || mouse_mode_active;
+ 
+ #if IS_ENABLED(CONFIG_ZMK_BATTERY_REPORTING)
+     // force power off, when battery low (<10%)
+-    if (state.on && !state.status_active) {
++    if ((state.on || mouse_mode_active) && !state.status_active) {
+         if (zmk_battery_state_of_charge() < 10) {
+             desired_state = false;
+         }
+@@ -653,6 +715,9 @@ static void zmk_rgb_underglow_status_update(struct k_timer *timer) {
+ }
+ 
+ static void zmk_led_write_pixels_work(struct k_work *work) {
++    if (zmk_mouse_mode_indicator_active()) {
++        zmk_rgb_set_ext_power();
++    }
+     zmk_led_write_pixels();
+     if (!state.status_active) {
+         zmk_rgb_set_ext_power();
+@@ -762,6 +827,8 @@ int zmk_rgb_underglow_change_spd(int direction) {
+     return zmk_rgb_underglow_save_state();
+ }
+ 
++#if IS_ENABLED(CONFIG_ZMK_RGB_UNDERGLOW_AUTO_OFF_IDLE) ||                                          \
++    IS_ENABLED(CONFIG_ZMK_RGB_UNDERGLOW_AUTO_OFF_USB) || MOUSE_MODE_INDICATOR_ENABLED
+ #if IS_ENABLED(CONFIG_ZMK_RGB_UNDERGLOW_AUTO_OFF_IDLE) ||                                          \
+     IS_ENABLED(CONFIG_ZMK_RGB_UNDERGLOW_AUTO_OFF_USB)
+ struct rgb_underglow_sleep_state {
+@@ -793,6 +860,8 @@ static int rgb_underglow_auto_state(bool target_wake_state) {
+     }
+ }
+ 
++#endif
++
+ static int rgb_underglow_event_listener(const zmk_event_t *eh) {
+ 
+ #if IS_ENABLED(CONFIG_ZMK_RGB_UNDERGLOW_AUTO_OFF_IDLE)
+@@ -807,6 +876,13 @@ static int rgb_underglow_event_listener(const zmk_event_t *eh) {
+     }
+ #endif
+ 
++#if MOUSE_MODE_INDICATOR_ENABLED
++    if (as_zmk_layer_state_changed(eh)) {
++        k_work_submit(&underglow_write_work);
++        return ZMK_EV_EVENT_BUBBLE;
++    }
++#endif
++
+     return -ENOTSUP;
+ }
+ 
+@@ -822,4 +898,8 @@ ZMK_SUBSCRIPTION(rgb_underglow, zmk_activity_state_changed);
+ ZMK_SUBSCRIPTION(rgb_underglow, zmk_usb_conn_state_changed);
+ #endif
+ 
++#if MOUSE_MODE_INDICATOR_ENABLED
++ZMK_SUBSCRIPTION(rgb_underglow, zmk_layer_state_changed);
++#endif
++
+ SYS_INIT(zmk_rgb_underglow_init, APPLICATION, CONFIG_APPLICATION_INIT_PRIORITY);
