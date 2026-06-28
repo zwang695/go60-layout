@@ -5,14 +5,14 @@ layers:
   - [TAB, Q, W, E, R, T, Y, U, I, O, P, \]
   - - ESC
     - {t: A, h: LCTRL}
-    - {t: S, h: '&mod_f18_neutralizer_v1_TKZ LALT'}
-    - {t: D, h: '&mod_f18_neutralizer_v1_TKZ LGUI'}
+    - {t: S, h: LALT}
+    - {t: D, h: LGUI}
     - {t: F, h: Symbol}
     - G
     - H
     - {t: J, h: Symbol}
-    - {t: K, h: '&mod_f18_neutralizer_v1_TKZ RGUI'}
-    - {t: L, h: '&mod_f18_neutralizer_v1_TKZ LALT'}
+    - {t: K, h: RGUI}
+    - {t: L, h: LALT}
     - {t: ;, h: RCTRL}
     - ''''
   - - {t: '&rgb_ug_status_macro', h: Magic}
