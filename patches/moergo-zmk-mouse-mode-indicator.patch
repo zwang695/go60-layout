@@ -1,3 +1,27 @@
+diff --git a/app/dts/bindings/zmk,mouse-mode-indicator.yaml b/app/dts/bindings/zmk,mouse-mode-indicator.yaml
+new file mode 100644
+index 0000000..82647ac
+--- /dev/null
++++ b/app/dts/bindings/zmk,mouse-mode-indicator.yaml
+@@ -0,0 +1,18 @@
++# Copyright (c) 2026
++# SPDX-License-Identifier: MIT
++
++description: Mouse mode RGB indicator
++
++compatible: "zmk,mouse-mode-indicator"
++
++properties:
++  layers:
++    type: array
++    required: true
++  pixels:
++    type: array
++    required: true
++  color:
++    type: array
++    required: true
++    description: Raw RGB byte values, ordered as red green blue.
 diff --git a/app/src/rgb_underglow.c b/app/src/rgb_underglow.c
 index c4834ca..3a74e11 100644
 --- a/app/src/rgb_underglow.c
