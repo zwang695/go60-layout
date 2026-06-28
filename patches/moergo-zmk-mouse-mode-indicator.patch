@@ -34,14 +34,15 @@ index c4834ca..59d920c 100644
  
  #if IS_ENABLED(CONFIG_ZMK_SPLIT_BLE_CENTRAL_BATTERY_LEVEL_FETCHING)
  #include <zmk/split/central.h>
-@@ -192,6 +193,60 @@ static void zmk_rgb_underglow_effect_swirl(void) {
+@@ -192,6 +193,61 @@ static void zmk_rgb_underglow_effect_swirl(void) {
  
  static int zmk_led_generate_status(void);
  
 +
 +#define MOUSE_MODE_INDICATOR DT_PATH(mouse_mode_indicator)
 +
-+#if defined(DT_N_S_mouse_mode_indicator_EXISTS)
++#if defined(DT_N_S_mouse_mode_indicator_EXISTS) &&                                                \
++    (!IS_ENABLED(CONFIG_ZMK_SPLIT) || IS_ENABLED(CONFIG_ZMK_SPLIT_ROLE_CENTRAL))
 +#define MOUSE_MODE_INDICATOR_ENABLED 1
 +#else
 +#define MOUSE_MODE_INDICATOR_ENABLED 0
