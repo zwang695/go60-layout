@@ -15,7 +15,18 @@ layers:
     - {t: L, h: LALT}
     - {t: ;, h: RCTRL}
     - ''''
-  - [Magic, Z, X, C, V, B, N, M, ',', ., /, Caps Word]
+  - - {t: '&rgb_ug_status_macro', h: Magic}
+    - Z
+    - X
+    - C
+    - V
+    - B
+    - N
+    - M
+    - ','
+    - .
+    - /
+    - Caps Word
   - - HOME
     - LEFT
     - RIGHT
