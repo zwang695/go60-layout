@@ -185,8 +185,8 @@
     mouse_mode_indicator {
         compatible = "zmk,mouse-mode-indicator";
         layers = <LAYER_Mouse LAYER_MouseSlow LAYER_MouseFast LAYER_MouseWarp>;
-        pixels = <7>;
-        color = <4 0 0>;
+        pixels = <7 8 9>;
+        color = <255 0 0>;
     };
 };
 
