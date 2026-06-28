@@ -465,6 +465,24 @@
                 , <&skq LSHFT>;
         };
 
+        // Alt/GUI HRM hold helper: tap F18 before releasing the modifier to neutralize OS-level modifier flashes.
+        mod_f18_neutralizer_v1_TKZ: mod_f18_neutralizer_v1_TKZ {
+            label = "&MOD_F18_NEUTRALIZER_V1_TKZ";
+            compatible = "zmk,behavior-macro-one-param";
+            #binding-cells = <1>;
+            tap-ms = <0>;
+            wait-ms = <0>;
+            bindings = <&macro_press>
+                , <&macro_param_1to1>
+                , <&kp MACRO_PLACEHOLDER>
+                , <&macro_pause_for_release>
+                , <&macro_tap>
+                , <&kp F18>
+                , <&macro_release>
+                , <&macro_param_1to1>
+                , <&kp MACRO_PLACEHOLDER>;
+        };
+
         // AutoShift Helper- &AS main macro is chained to &AS_HT hold tap and &AS_Shifted macro - TailorKey
         AS_Shifted_v1_TKZ: AS_Shifted_v1_TKZ {
             label = "&AS_SHIFTED_V1_TKZ";
@@ -667,7 +685,7 @@
             compatible = "zmk,behavior-hold-tap";
             #binding-cells = <2>;
             tapping-term-ms = <280>;
-            bindings = <&kp>, <&kp>;
+            bindings = <&mod_f18_neutralizer_v1_TKZ>, <&kp>;
             flavor = "balanced";
             quick-tap-ms = <125>;
             require-prior-idle-ms = <150>;
@@ -695,7 +713,7 @@
             compatible = "zmk,behavior-hold-tap";
             #binding-cells = <2>;
             tapping-term-ms = <280>;
-            bindings = <&kp>, <&kp>;
+            bindings = <&mod_f18_neutralizer_v1_TKZ>, <&kp>;
             flavor = "balanced";
             quick-tap-ms = <125>;
             require-prior-idle-ms = <150>;
@@ -737,7 +755,7 @@
             compatible = "zmk,behavior-hold-tap";
             #binding-cells = <2>;
             tapping-term-ms = <280>;
-            bindings = <&kp>, <&kp>;
+            bindings = <&mod_f18_neutralizer_v1_TKZ>, <&kp>;
             flavor = "balanced";
             quick-tap-ms = <125>;
             require-prior-idle-ms = <150>;
@@ -766,7 +784,7 @@
             compatible = "zmk,behavior-hold-tap";
             #binding-cells = <2>;
             tapping-term-ms = <280>;
-            bindings = <&kp>, <&kp>;
+            bindings = <&mod_f18_neutralizer_v1_TKZ>, <&kp>;
             flavor = "balanced";
             quick-tap-ms = <125>;
             require-prior-idle-ms = <150>;
