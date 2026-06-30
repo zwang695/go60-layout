@@ -18,8 +18,6 @@ jobs:
         run: scripts/apply-tri-state-patch.sh src
       - name: Apply ZMK layer locking patch
         run: scripts/apply-layer-locking-patch.sh src
-      - name: Apply ZMK hold-tap neutralizer patch
-        run: scripts/apply-hold-tap-neutralizer-patch.sh src
       - name: Apply mouse mode RGB indicator patch
         run: scripts/apply-mouse-mode-indicator-patch.sh src
       - uses: cachix/install-nix-action@v25

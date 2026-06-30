@@ -674,7 +674,6 @@
             hold-trigger-key-positions = <KEYS_R THUMBS>;
             hold-trigger-on-release;
             hold-while-undecided;
-            hold-while-undecided-neutralizer;
         };
 
         // Homerow Mod for the left pinky - TailorKey
@@ -703,7 +702,6 @@
             hold-trigger-key-positions = <KEYS_R THUMBS>;
             hold-trigger-on-release;
             hold-while-undecided;
-            hold-while-undecided-neutralizer;
         };
 
         // Homerow Mod for the right index finger - TailorKey
@@ -746,7 +744,6 @@
             hold-trigger-key-positions = <KEYS_L THUMBS>;
             hold-trigger-on-release;
             hold-while-undecided;
-            hold-while-undecided-neutralizer;
         };
 
         // Homerow Mod for the right pinky - TailorKey
@@ -776,7 +773,6 @@
             hold-trigger-key-positions = <KEYS_L THUMBS>;
             hold-trigger-on-release;
             hold-while-undecided;
-            hold-while-undecided-neutralizer;
         };
 
         // thumb_layer_access - TailorKey
